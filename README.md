@@ -19,7 +19,7 @@ Lambda는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를
 ```java
 const text = event.text;
 
-var lexParams = {        
+let lexParams = {        
   botAliasId: process.env.botAliasId,
   botId: process.env.botId,
   localeId: process.env.localeId,
