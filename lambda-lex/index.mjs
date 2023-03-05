@@ -7,7 +7,7 @@ export const handler = async (event) => {
 
     const text = event.text;
 
-    var lexParams = {        
+    let lexParams = {        
         botAliasId: process.env.botAliasId,
         botId: process.env.botId,
         localeId: process.env.localeId,
