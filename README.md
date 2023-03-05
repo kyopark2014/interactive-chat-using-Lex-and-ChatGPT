@@ -46,11 +46,11 @@ return {
 ```
 
 
-## ChatGPT AI를 위한 인터페이스
+### Lambda를 이용해 ChatGPT에 요청하기 
 
 [2023년 3월에 ChatGPT API가 오픈](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)되어서 Lex와 연동할 수 있게 되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 
 
-### gpt-3.5-turbo 모델 사용하기 
+#### gpt-3.5-turbo 모델 사용하기 
 
 [OpenAI가 제공하는 ChatGPT API](https://platform.openai.com/docs/api-reference/chat)인 "v1/chat/completions"로 HTTPS POST로 요청을 수행합니다. 이를 위해 여기서는 [fetch](https://www.npmjs.com/package/node-fetch)를 사용합니다. 이때 ChatGPT에 전달하는 요청의 header에는 아래와 같이 Authorization과 Content-Type을 포함하여야 합니다. Authorization에 필요한 API Key는 [OpenAI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 환경변수로 저장하여 사용합니다. 메시지 요청시 role은 [ChatGPT API Transition Guide](https://help.openai.com/en/articles/7042661-chatgpt-api-transition-guide)에 따라 "user", "system", "assistant"로 지정할 수 있습니다.
 
@@ -89,7 +89,7 @@ if (res.ok) {
 ```
 
 
-### text-davinci-003 모델 사용하기 
+#### text-davinci-003 모델 사용하기 
 
 "text-davinci-003" 모델은 [Completion API](https://platform.openai.com/docs/api-reference/completions)에 따라 "v1/completions"을 사용합니다. 여기서는 [OpenAI Node.js Library](https://www.npmjs.com/package/openai)을 이용해 구현합니다. 
 
@@ -128,5 +128,33 @@ return {
   id: result.data.id,
   msg: choices[0].text,
 };    
+```
+
+### Client에서 Chat API 활용하기
+
+[chat.js](https://github.com/kyopark2014/ChatGPT/blob/main/html/chat.js)와 같이 Client는 Chat 서버에 RESTful 방식으로 아래와 같이 채팅 메시지를 전송하고 응답이 오면 수신 채팅 버블에 표시 합니다. 여기서 채팅서버의 주소는 CloudFront의 도메인입니다. 
+
+```java
+function sendRequest(text) {
+    const uri = "https://dre57i7noiw1a.cloudfront.net/chat";
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", uri, true);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            response = JSON.parse(xhr.responseText);
+            console.log("response: " + JSON.stringify(response));
+            
+            addReceivedMessage(response.msg)
+        }
+    };
+
+    var requestObj = {"text":text}
+    console.log("request: " + JSON.stringify(requestObj));
+
+    var blob = new Blob([JSON.stringify(requestObj)], {type: 'application/json'});
+
+    xhr.send(blob);            
+}
 ```
 
