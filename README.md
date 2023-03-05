@@ -203,11 +203,10 @@ cdk bootstrap aws://account-id/ap-northeast-2
 cdk deploy
 ```
 
-정상적으로 설치가 되면 아래와 같은 "Output"이 보여집니다. 여기서 UploadUrl은 "https://d1kpgkk8y8p43t.cloudfront.net/upload.html" 이고, UpdateCommend는 "aws s3 cp ../html/upload.html s3://cdkstorytimestack-storage8d9329be-1of8fsmmt6vyc"입니다. 
+정상적으로 설치가 되면 아래와 같은 "Output"이 보여집니다. 여기서 distributionDomainName은 "d3ndv6lhze8yc5.cloudfront.net"이고, WebUrl은 "https://d3ndv6lhze8yc5.cloudfront.net/chat.html"이며, UpdateCommend = aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
 
 
-[파일이 보여져야함]
-
+![noname](https://user-images.githubusercontent.com/52392004/222942854-065a36a8-ee7d-4a92-b7e3-9a5fbaee105d.png)
 
 
 "html/chat.js"를 열어서, 아래와 같이 url 주소를 업데이트합니다. 
