@@ -158,3 +158,90 @@ function sendRequest(text) {
 }
 ```
 
+## AWS CDK로 리소스 생성 코드 준비
+
+
+
+## 직접 실습 해보기
+
+### Cloud9 생성
+
+AWS Cloud9을 활용하면 브라우저만으로 코드를 작성, 실행 및 디버깅을 쉽게 할 수 있으며, 배포(Deployment)를 위한 편리한 환경을 생성할 수 있습니다. 여기서는 편의상 한국리전을 사용하여 Cloud9 으로 인프라를 생성합니다.
+
+[Cloud9 console](https://ap-northeast-2.console.aws.amazon.com/cloud9control/home?region=ap-northeast-2#/)로 진입하여 [Create environment]를 선택한 후에 아래처럼 Name을 입력합니다. 여기서는 "Storytime"이라고 입력하였습니다. 이후 나머지는 기본값을 유지하고 [Create]를 선택합니다.
+
+
+![noname](https://user-images.githubusercontent.com/52392004/219947047-51cd8be9-c3c1-4d69-9322-b6af1d5b335b.png)
+
+Cloud9이 생성되면 [Open]후 아래처럼 Terminal을 준비합니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/219947426-13156f52-4e08-437d-87d1-6ff0302a3d95.png)
+
+### CDK로 솔루션 배포하기
+
+아래와 같이 소스를 다운로드합니다.
+
+```java
+git clone https://github.com/kyopark2014/simple-serverless-storytime
+```
+
+"cdk-storytime/lib/cdk-storytime-stack.ts"을 열어서, email 주소를 업데이트 합니다.
+
+![noname](https://user-images.githubusercontent.com/52392004/219948651-c724d298-aac6-427c-b072-5ed6edea6fcb.png)
+
+
+터미널로 돌아가서, CDK 폴더로 이동한 후에 CDK v2.64.0을 설치합니다.
+
+```java
+cd simple-serverless-storytime/cdk-storytime && npm install aws-cdk-lib@2.64.0
+```
+
+CDK를 처음 사용하는 경우에는 아래와 같이 bootstrap을 실행하여야 합니다. 여기서 account-id은 12자리의 Account Number를 의미합니다. AWS 콘솔화면에서 확인하거나, "aws sts get-caller-identity --query account-id --output text" 명령어로 확인할 수 있습니다.
+
+```java
+cdk bootstrap aws://account-id/ap-northeast-2
+```
+
+이제 CDK로 전체 인프라를 생성합니다.
+
+```java
+cdk deploy
+```
+
+정상적으로 인프라가 설치가 되면 아래와 같은 화면이 노출됩니다. 여기서 UploadUrl은 "https://d1kpgkk8y8p43t.cloudfront.net/upload.html" 이고, UpdateCommend는 "aws s3 cp ../html/upload.html s3://cdkstorytimestack-storage8d9329be-1of8fsmmt6vyc"입니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/219975807-e13508f8-2e80-4620-ad84-3b63021bd3f0.png)
+
+
+
+아래와 같이 "html/upload.html" 파일을 오픈하여 UploadUrl 정보를 이용하여 url을 업데이트 합니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/219948314-514d5c3c-8e9e-4682-9bdc-a41c00d381a4.png)
+
+이제 수정한 upload.html 파일을 아래와 같이 S3 bucket에 복사합니다. 이때의 명령어는 UpdateCommend를 참고합니다.
+
+```java
+aws s3 cp ../html/upload.html s3://cdkstorytimestack-storage8d9329be-1of8fsmmt6vyc
+```
+
+인프라를 설치하고 나면, CDK 라이브러리에 등록한 이메일 주소로 Confirmation 메시지가 전달됩니다. 이메일을 열어서 아래와 같이 [Confirm subscription]을 선택합니다.
+
+![noname](https://user-images.githubusercontent.com/52392004/219817649-108b5c81-8460-49e3-a4bd-9af1dd5b091b.png)
+
+정상적으로 진행되면 아래와 같은 결과를 얻습니다.
+
+![noname](https://user-images.githubusercontent.com/52392004/219817719-ea749a1a-1b90-406b-94e0-6c28eddb928e.png)
+
+
+
+### 실행하기 
+
+
+
+## 리소스 정리하기 
+
+더이상 인프라를 사용하지 않는 경우에 아래처럼 모든 리소스를 삭제할 수 있습니다. 
+
+```java
+cdk destroy
+```
