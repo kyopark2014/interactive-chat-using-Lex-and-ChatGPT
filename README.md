@@ -8,6 +8,12 @@ Amazon Lex는 애플리케이션에 대화형 인터페이스를 구축하는 �
 
 ## Aamazon Lex의 구현
 
+
+### Lex에서 Chatbot의 구현
+
+
+### Lambda를 이용해 Lex로 메시지 전송하기
+
 서울 리전은 Lex V1을 지원하지 않으므로, Lev V2를 이용하여야 합니다. Lex에 사용자의 입력을 메시지로 전송하기 위하여 Lex V2에서는 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용하므로, Lex Runtime V2 client를 아래와 같이 정의 합니다. 
 
 ```java
@@ -42,5 +48,48 @@ return {
 
 ## ChatGPT AI를 위한 인터페이스
 
-[2023년 3월에 ChatGPT API가 공식적으로 오픈](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)되어서 Lex와 연동할 수 있게 되었습니다.
+[2023년 3월에 ChatGPT API가 오픈](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)되어서 Lex와 연동할 수 있게 되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 
 
+### gpt-3.5-turbo 모델 사용하기 
+
+[OpenAI가 제공하는 ChatGPT API](https://platform.openai.com/docs/api-reference/chat)인 "v1/chat/completions"로 HTTPS POST로 요청을 수행합니다. 이를 위해 여기서는 fetch를 사용합니다. 이때 ChatGPT에 전달하는 요청의 header에는 아래와 같이 Authorization과 Content-Type을 포함하여야 합니다. Authorization에 필요한 API Key는 [OpenAPI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 환경변수로 저장하여 사용합니다. 메시지 요청시 role로 "user", 
+
+```java
+import fetch from 'node-fetch';
+
+const apiKey = process.env.OPENAI_API_KEY
+
+let msg = "";
+const res = await fetch('https://api.openai.com/v1/chat/completions',{
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer "+apiKey,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "user", "content": prompt},
+    ],
+  }),
+});
+
+if (res.ok) {
+  const data = await res.json();
+  console.log("output: ", data.choices[0]);
+
+  msg = data.choices[0].message.content;
+  console.log("msg: "+ msg);
+      
+  return {
+    statusCode: 200,
+    msg: msg
+  };    
+}
+```
+
+
+### text-davinci-003 모델 사용하기 
+
+"v1/completions"을 사용합니다. 
+[Completion API](https://platform.openai.com/docs/api-reference/completions)
