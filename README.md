@@ -203,23 +203,24 @@ cdk bootstrap aws://account-id/ap-northeast-2
 cdk deploy
 ```
 
-정상적으로 설치가 되면 아래와 같은 "Output"이 보여집니다. 여기서 distributionDomainName은 "d3ndv6lhze8yc5.cloudfront.net"이고, WebUrl은 "https://d3ndv6lhze8yc5.cloudfront.net/chat.html"이며, UpdateCommend = aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
-
+정상적으로 설치가 되면 아래와 같은 "Output"이 보여집니다. 여기서 distributionDomainName은 "d3ndv6lhze8yc5.cloudfront.net"이고, WebUrl은 "https://d3ndv6lhze8yc5.cloudfront.net/chat.html"이며, UpdateCommend은 "aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn"입니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/222942854-065a36a8-ee7d-4a92-b7e3-9a5fbaee105d.png)
 
 
-"html/chat.js"를 열어서, 아래와 같이 url 주소를 업데이트합니다. 
+"html/chat.js"를 열어서, 아래와 같이 url 주소를 업데이트합니다. 여기에서는 도메인 이름으로 distributionDomainName인 "d3ndv6lhze8yc5.cloudfront.net"을 입력합니다.
 
-![image](https://user-images.githubusercontent.com/52392004/222942095-80c97dbf-e236-4934-ae3e-abb9f1e51f69.png)
+![noname](https://user-images.githubusercontent.com/52392004/222943096-11918479-ba6c-4605-aea8-f92eb729367e.png)
+
 
 이제 수정한 chat.js 파일을 아래와 같이 S3 bucket에 복사합니다. 이때의 명령어는 UpdateCommend를 참고합니다.
 
 ```java
-aws s3 cp ../html/chat.js s3://cdkstorytimestack-storage8d9329be-1of8fsmmt6vyc
+aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
 ```
 
-정상적으로 진행되면 아래와 
+이제 WebUrl인 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html"로 접속합니다. 
+
 
 ### 실행하기 
 
