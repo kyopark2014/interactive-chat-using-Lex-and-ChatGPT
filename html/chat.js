@@ -157,7 +157,7 @@ attachFile.addEventListener('click', function(){
 });
 
 function sendRequest(text) {
-    const uri = "https://dre57i7noiw1a.cloudfront.net/chat";
+    const uri = "https://d3ndv6lhze8yc5.cloudfront.net/chat";
     const xhr = new XMLHttpRequest();
 
     xhr.open("POST", uri, true);
