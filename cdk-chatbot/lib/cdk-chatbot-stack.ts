@@ -176,7 +176,7 @@ export class CdkChatbotStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, 'UpdateCommend', {
-      value: 'aws s3 cp ../html/chat.html '+'s3://'+s3Bucket.bucketName,
+      value: 'aws s3 cp ../html/chat.js '+'s3://'+s3Bucket.bucketName,
       description: 'The url of web file upload',
     });
   }
