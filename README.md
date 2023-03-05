@@ -91,5 +91,42 @@ if (res.ok) {
 
 ### text-davinci-003 모델 사용하기 
 
-"v1/completions"을 사용합니다. 
-[Completion API](https://platform.openai.com/docs/api-reference/completions)
+"text-davinci-003" 모델은 [Completion API](https://platform.openai.com/docs/api-reference/completions)에 따라 "v1/completions"을 사용합니다. 여기서는 [OpenAI Node.js Library](https://www.npmjs.com/package/openai)을 이용해 구현합니다. 
+
+```java
+import { Configuration, OpenAIApi } from "openai";
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
+
+const models = ['text-davinci-003','code-davinci-002'];
+const frequency_penalty = 0.5;
+const max_tokens = 2000;
+const presence_penalty = 0.1;
+const temperature = 0;
+const top_p = 1;
+const model_name = models[0];
+const prompt = event.text;
+
+const params = {
+  model: model_name,
+  prompt: prompt,
+  temperature: temperature, 
+  max_tokens: max_tokens, 
+  top_p: top_p, 
+  frequency_penalty: frequency_penalty,
+  presence_penalty: presence_penalty, 
+};
+
+const result = await openai.createCompletion(params);
+const choices = result.data.choices;
+return {
+  statusCode: 200,
+  id: result.data.id,
+  msg: choices[0].text,
+};    
+```
+
