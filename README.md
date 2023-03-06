@@ -337,7 +337,7 @@ distribution.addBehavior("/chat", new origins.RestApiOrigin(api), {
 });
 ```
 
-ChatGPT에 텍스트를 전송하여 응답을 받는 Lambda를 아래와 같이 준비합니다. 여기서 OPENAI_API_KEY는 OpenAI에서 발급받은 API Key 입니다. 미리 받은 Key가 없다면 [OpenAI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 입력합니다. 
+ChatGPT에 텍스트를 전송하여 응답을 받는 Lambda를 아래와 같이 준비합니다. 여기서 OPENAI_API_KEY는 OpenAI에서 발급받은 API Key 입니다. 
 
 ```java
 const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
@@ -405,9 +405,15 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### 환경변수 업데이트
 
-Cloud9으로 돌아가서 왼쪽 파일탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 아래와 같이 botId, botAliasId, localeId를 업데이트 합니다. 
+Cloud9으로 돌아가서 왼쪽 파일탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId, localeId를 업데이트 합니다. 
 
-![noname](https://user-images.githubusercontent.com/52392004/223064111-7bd6f9ae-745b-45df-9c1b-7d38d7351bec.png)
+![noname](https://user-images.githubusercontent.com/52392004/223222609-e2dae835-66cb-4ae2-a3f8-d094c4afe6f4.png)
+
+또한, "Lambda for chatgpt"의 environment에서 "OPENAI_API_KEY"을 입력합니다. 미리 받은 Key가 없다면 [OpenAI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 입력합니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/223222868-3e53dbce-fae1-4255-bde8-fd3b9d60d663.png)
+
+
 
 
 ### 배포하기 
