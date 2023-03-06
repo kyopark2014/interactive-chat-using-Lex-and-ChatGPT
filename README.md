@@ -10,13 +10,13 @@
 ![image](https://user-images.githubusercontent.com/52392004/223118356-ff47ed18-de76-403c-ab88-c7583af757bf.png)
 
 
-단계1: 사용자는 CloudFront의 도메인으로 Chatbot 웹페이지를 시도하면, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
+단계1: 사용자는 [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)의 도메인으로 Chatbot 웹페이지를 시도하면, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
 
 단계2: 웹페이지에서 채팅 메시지를 입력합니다. 이때 "/chat"리소스에 POST Method으로 JSON포맷으로된 text 메시지를 Restful 형태로 요청하게 됩니다.
 
-단계3: [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)는 API Gateway로 요청을 전송합니다.
+단계3: CloudFront는 API Gateway로 요청을 전송합니다.
 
-단계4: API Gateway는 /chat 리소스에 연결되어 있는 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 호출합니다.
+단계4: [Amazon API Gateway](https://aws.amazon.com/ko/api-gateway/)는 /chat 리소스에 연결되어 있는 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 호출합니다.
 
 단계5: Lambda 함수는 Lex V2 API를 이용하여 채팅 메시지를 Lex에 전달합니다.
 
