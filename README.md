@@ -443,7 +443,13 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
+[AWS Lex Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에서 아래와 같이 "HellowWorldBot"을 선택하여 [Intents]에서 [FallbackIntent]를 선택합니다. 
 
+![noname](https://user-images.githubusercontent.com/52392004/223212743-056c3f3e-16b1-4590-b60e-fd30376fe2b0.png)
+
+이후 아래로 스크롤하여 Fulfillment에서 
+
+![noname](https://user-images.githubusercontent.com/52392004/223212133-c9d75d6c-96fb-4d9b-8728-c7990e37ec51.png)
 
 
 ## 리소스 정리하기 
