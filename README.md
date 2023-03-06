@@ -410,7 +410,7 @@ Cloud9으로 돌아가서 왼쪽 파일탐색기에서 "interactive-chat-using-L
 ![noname](https://user-images.githubusercontent.com/52392004/223064111-7bd6f9ae-745b-45df-9c1b-7d38d7351bec.png)
 
 
-
+### 배포하기 
 
 이제 CDK로 전체 인프라를 생성합니다.
 
@@ -434,10 +434,7 @@ cdk deploy
 aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
 ```
 
-
-
-
-### 실행하기 
+### Lex에서 
 
 [AWS Lex Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에서 "HellowWorldBot"을 선택하여 "Aliases"에서 [Languages]를 선택하여 아래처럼 [Korean(South Korea)]를 선택합니다.
 
@@ -455,6 +452,7 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ![noname](https://user-images.githubusercontent.com/52392004/223218985-23b87c1a-4020-4996-a63f-df082743b35d.png)
 
+### 실행하기 
 
 화면 상단의 [Build]를 선택하여 Lambda가 실행되도록 합니다.  
 
