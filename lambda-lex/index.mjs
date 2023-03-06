@@ -17,23 +17,28 @@ export const handler = async (event) => {
     
     const lexClient = new LexRuntimeV2Client();
     const command = new RecognizeTextCommand(lexParams);
+
+    let response = "";
     try {
-        const data = await lexClient.send(command);
-        console.log("response: ", data['messages']);
+      const data = await lexClient.send(command);
+      console.log("response: ", JSON.stringify(data['messages']));
         
-        const messages = data['messages'][0];
-        console.log('text: ', messages.content);
+      const messages = data['messages'][0];
+      console.log('text: ', messages.content);
 
-        return {
-          statusCode: 200,
-          body: messages.content,
-        };
-      } catch (err) {
-        console.log("Error responding to message. ", err);
+      response = {
+        statusCode: 200,
+        body: messages.content,
+      };
+    } catch (err) {
+      console.log("Error responding to message. ", err);
 
-        return {
-          statusCode: 500,
-          body: JSON.stringify(err),          
-        };
+      response = {
+        statusCode: 500,
+        body: JSON.stringify(err),          
+      };
     }
+    console.log('response: ', JSON.stringify(response));
+
+    return response;
 }

@@ -4,9 +4,6 @@ var host = 'localhost';
 const title = document.querySelector('#title');
 const sendBtn = document.querySelector('#sendBtn');
 const message = document.querySelector('#chatInput')
-const newConversation = document.querySelector('#newConversation');  // To input callee number
-const newParticipant = document.querySelector('#refer');  // To input callee number
-
 const chatPanel = document.querySelector('#chatPanel');
 
 HashMap = function() {
@@ -93,8 +90,6 @@ function onSend(e) {
         console.log("msg: ", "empty!");
     }    
     message.value = "";
-
-    chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 }
 
 function uuidv4() {
@@ -122,7 +117,9 @@ function addSentMessage(text) {
     msglist[index].innerHTML = 
         `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;   
 
-    sendRequest(text);    
+    chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
+
+    sendRequest(text);        
 }       
 
 function addReceivedMessage(msg) {
@@ -134,6 +131,8 @@ function addReceivedMessage(msg) {
 
     // msglist[index].innerHTML =  `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1><h2>${timestr}</h2>${msg}&nbsp;</div>`;     
     msglist[index].innerHTML = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;  
+
+    chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 }
 
 function addNotifyMessage(msg) {
@@ -166,14 +165,14 @@ function sendRequest(text) {
             response = JSON.parse(xhr.responseText);
             console.log("response: " + JSON.stringify(response));
             
-            addReceivedMessage(response.msg)
+            addReceivedMessage(response.body);
         }
     };
 
-    var requestObj = {"text":text}
+    var requestObj = {"text":text};
     console.log("request: " + JSON.stringify(requestObj));
 
     var blob = new Blob([JSON.stringify(requestObj)], {type: 'application/json'});
 
-    xhr.send(blob);            
+    xhr.send(blob);
 }

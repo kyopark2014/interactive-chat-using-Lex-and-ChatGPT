@@ -56,29 +56,26 @@ export class CdkChatbotStack extends cdk.Stack {
       },
       priceClass: cloudFront.PriceClass.PRICE_CLASS_200,  
     });
-
     new cdk.CfnOutput(this, 'distributionDomainName', {
       value: distribution.domainName,
       description: 'The domain name of the Distribution',
     });
 
     // Lambda for lex
-    const lambdaLex = new lambda.Function(this, 'lambda-lex', {
+    const lambdaLex = new lambda.Function(this, 'lambda-function-lex', {
       description: 'lambda for chat',
-      functionName: 'lambda-lex',
+      functionName: 'lambda-function-lex',
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-lex')),
       timeout: cdk.Duration.seconds(120),
       environment: {
+        botId: "BSZQXD0ABN",
         botAliasId: "TSTALIASID",
-        botId: "OLL2GYMJSN",
-        localeId: "en_US",
+        localeId: "ko_KR", // en_US
         sessionId: "mysession-01",
       }
     });     
-    s3Bucket.grantReadWrite(lambdaLex); // permission for s3
-
     const lexPolicy = new iam.PolicyStatement({  
       actions: ['lex:*'],
       resources: ['*'],
@@ -90,23 +87,6 @@ export class CdkChatbotStack extends cdk.Stack {
     );
     // permission for api Gateway
     lambdaLex.grantInvoke(new iam.ServicePrincipal('apigateway.amazonaws.com'));    
-
-    // Lambda for chatgpt
-    const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
-      description: 'lambda for chatgpt',
-      functionName: 'lambda-chatgpt',
-      handler: 'index.handler',
-      runtime: lambda.Runtime.NODEJS_18_X,
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-chatgpt')),
-      timeout: cdk.Duration.seconds(120),
-      environment: {
-        OPENAI_API_KEY: "123456",
-      }
-    });     
-    s3Bucket.grantReadWrite(lambdachat); // permission for s3
-
-    // permission for api Gateway
-    lambdachat.grantInvoke(new iam.ServicePrincipal('apigateway.amazonaws.com'));
     
     // role
     const role = new iam.Role(this, "api-role-chatbot", {
@@ -136,7 +116,7 @@ export class CdkChatbotStack extends cdk.Stack {
 
     // POST method
     const chat = api.root.addResource('chat');
-    chat.addMethod('POST', new apiGateway.LambdaIntegration(lambdachat, {
+    chat.addMethod('POST', new apiGateway.LambdaIntegration(lambdaLex, {
       passthroughBehavior: apiGateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
       credentialsRole: role,
       integrationResponses: [{
@@ -154,12 +134,12 @@ export class CdkChatbotStack extends cdk.Stack {
       ]
     }); 
 
-    new cdk.CfnOutput(this, 'apiUrl-chatbot', {
+    new cdk.CfnOutput(this, 'apiUrl-lex', {
       value: api.url,
       description: 'The url of API Gateway',
     }); 
-    new cdk.CfnOutput(this, 'curlUrl-chatbot', {
-      value: "curl -X POST "+api.url+'chat -H "Content-Type: application/json" -d \'{"text":"How are u?"}\'',
+    new cdk.CfnOutput(this, 'curlUrl-lex', {
+      value: "curl -X POST "+api.url+'chat -H "Content-Type: application/json" -d \'{"text":"안녕"}\'',
       description: 'Curl commend of API Gateway',
     }); 
 
@@ -169,7 +149,7 @@ export class CdkChatbotStack extends cdk.Stack {
       allowedMethods: cloudFront.AllowedMethods.ALLOW_ALL,  
       viewerProtocolPolicy: cloudFront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     });    
-
+    
     new cdk.CfnOutput(this, 'WebUrl', {
       value: 'https://'+distribution.domainName+'/chat.html',      
       description: 'The web url of request for chat',
@@ -179,5 +159,18 @@ export class CdkChatbotStack extends cdk.Stack {
       value: 'aws s3 cp ../html/chat.js '+'s3://'+s3Bucket.bucketName,
       description: 'The url of web file upload',
     });
+
+    // Lambda for chatgpt
+    const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
+      description: 'lambda for chatgpt',
+      functionName: 'lambda-chatgpt',
+      handler: 'index.handler',
+      runtime: lambda.Runtime.NODEJS_18_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-chatgpt')),
+      timeout: cdk.Duration.seconds(120),
+      environment: {
+        OPENAI_API_KEY: "123456",
+      }
+    });     
   }
 }
