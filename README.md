@@ -225,6 +225,10 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 ### 실행하기 
 
 
+![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
+
+
+
 
 ## 리소스 정리하기 
 
