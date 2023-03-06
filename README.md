@@ -429,6 +429,8 @@ cdk deploy
 ![noname](https://user-images.githubusercontent.com/52392004/222942854-065a36a8-ee7d-4a92-b7e3-9a5fbaee105d.png)
 
 
+### Html의 Javascript의 도메인 주소 업데이트하기
+
 "html/chat.js"를 열어서, 아래와 같이 url 주소를 업데이트합니다. 여기에서는 도메인 이름으로 distributionDomainName인 "d3ndv6lhze8yc5.cloudfront.net"을 입력합니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/222943096-11918479-ba6c-4605-aea8-f92eb729367e.png)
