@@ -18,7 +18,7 @@
 
 단계4: API Gateway는 /chat 리소스에 연결되어 있는 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 호출합니다.
 
-단계5: Lambda는 Lex V2 API를 이용하여 채팅 메시지를 Lex에 전달합니다.
+단계5: Lambda 함수는 Lex V2 API를 이용하여 채팅 메시지를 Lex에 전달합니다.
 
 단계6: Lex는 미리 정의한 Intent가 있는 경우에 해당하는 동작을 수행합니다. Intent에 없는 메시지가 입력시 ChatGPT로 요청을 보냅니다.
 
@@ -26,7 +26,7 @@
 
 ## 대화형 Chatbot의 구현
 
-### Lambda를 이용해 Lex로 메시지 전송하기
+### Lambda 함수를 이용해 Lex로 메시지 전송하기
 
 서울 리전은 Lex V1을 지원하지 않고, Lev V2만을 지원합니다. 따라서, Lex에 사용자의 입력을 메시지로 전송하기 위해서는 Lex V2의 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용합니다. Lex Runtime V2 client를 아래와 같이 정의합니다. 
 
@@ -34,7 +34,7 @@
 import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
 ```
 
-Lambda는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를 이용해 메시지를 전달하게 되며, Lex에서 전달한 응답에서 메시지를 추출하여 전달합니다. 
+Lambda 함수는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를 이용해 메시지를 전달하게 되며, Lex에서 전달한 응답에서 메시지를 추출하여 전달합니다. 
 
 ```java
 const text = event.text;
@@ -58,7 +58,7 @@ return {
 ```
 
 
-### Lambda를 이용해 ChatGPT API를 이용하기
+### Lambda 를 이용해 ChatGPT API를 이용하기
 
 [2023년 3월에 ChatGPT의 공식 오픈 API](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)가 공개되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 여기서는 ChatGPT 공식 API와 함께 채팅중 검색을 지원하는 "text-davinci-003" 모델을 사용하는 방법을 설명합니다.
 
@@ -267,7 +267,7 @@ function sendRequest(text) {
 
 여기서는 typescript를 이용하여 AWS CDK를 구성합니다. 상세 코드는 [여기(cdk-chatbot-stack.ts)](https://github.com/kyopark2014/interactive-chat-using-Lex-and-ChatGPT/blob/main/cdk-chatbot/lib/cdk-chatbot-stack.ts)에서 확인할 수 있습니다. 
 
-Lex에 대한 Lambda함수는 아래와 같이 정의합니다. environment에 botId, botAliasId를 포함하여야 합니다. 여기서는 한국어로 된 chatbot을 이용하므로 아래와 같이 localeId로 "ko_KR"를 지정합니다. 이 Lambda함수는 Lex와 API Gateway에 대한 퍼미션을 가져야 합니다. 
+Lex에 대한 Lambda 함수는 아래와 같이 정의합니다. environment에 botId, botAliasId를 포함하여야 합니다. 여기서는 한국어로 된 chatbot을 이용하므로 아래와 같이 localeId로 "ko_KR"를 지정합니다. 이 Lambda 함수는 Lex와 API Gateway에 대한 퍼미션을 가져야 합니다. 
 
 ```java
 // Lambda for lex
@@ -339,7 +339,7 @@ distribution.addBehavior("/chat", new origins.RestApiOrigin(api), {
 });
 ```
 
-ChatGPT에 텍스트를 전송하여 응답을 받는 Lambda를 아래와 같이 준비합니다. 여기서 OPENAI_API_KEY는 OpenAI에서 발급받은 API Key 입니다. 
+ChatGPT에 텍스트를 전송하여 응답을 받는 Lambda 함수를 아래와 같이 준비합니다. 여기서 OPENAI_API_KEY는 OpenAI에서 발급받은 API Key 입니다. 
 
 ```java
 const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
@@ -444,7 +444,7 @@ cdk deploy
 aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
 ```
 
-### Lex에서 Lambda로 ChatGPT를 호출하도록 설정하기
+### Lex에서 Lambda 함수로 ChatGPT를 호출하도록 설정하기
 
 [AWS Lex Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에서 "HellowWorldBot"을 선택하여 "Aliases"에서 [Languages]를 선택하여 아래처럼 [Korean(South Korea)]를 선택합니다.
 
