@@ -4,7 +4,7 @@
 
 ## Chatbot Architecture
 
-여기에서 구현하는 Architecture는 아래와 같습니다. [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)를 이용하여 채팅을 위한 웹페이지를 제공합니다. 사용자가 입력한 채팅 메시지는 [Amazon API Gateway](https://aws.amazon.com/ko/api-gateway/)와 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 이용해 Lex에서 의도(Intent)파악후 답변을 하게 됩니다. 그런데, Lex에서 인식되지 못한 의도가 있다면 Lambda 함수를 이용하여 ChatGPT에 질의를 하고, 그 결과를 다시 전달하여 채팅창에 표시하게 됩니다. 이러한 대화형 Chatbot을 구성하기 위한 인프라는 [AWS CDK](https://aws.amazon.com/ko/cdk/)를 이용해 생성 및 관리됩니다.
+여기에서 구현하는 Architecture는 아래와 같습니다. [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)를 이용하여 채팅을 위한 웹페이지를 제공합니다. 사용자가 입력한 채팅 메시지는 [Amazon API Gateway](https://aws.amazon.com/ko/api-gateway/)와 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 이용해 Lex에서 의도(Intent)를 파악후 답변을 합니다. 그런데, Lex에서 인식되지 못한 의도가 있다면 Lambda 함수를 이용하여 ChatGPT에 질의를 하고, 그 결과를 채팅창에 표시하게 됩니다. 이러한 대화형 Chatbot을 구성하기 위한 인프라는 [AWS CDK](https://aws.amazon.com/ko/cdk/)를 이용해 생성 및 관리됩니다.
 
 ![image](https://user-images.githubusercontent.com/52392004/223118356-ff47ed18-de76-403c-ab88-c7583af757bf.png)
 
