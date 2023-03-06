@@ -26,7 +26,39 @@
 
 ## 대화형 Chatbot의 구현
 
-### ChatGPT API
+### Lambda를 이용해 Lex로 메시지 전송하기
+
+서울 리전은 Lex V1을 지원하지 않고, Lev V2만을 지원합니다. 따라서, Lex에 사용자의 입력을 메시지로 전송하기 위해서는 Lex V2의 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용합니다. Lex Runtime V2 client를 아래와 같이 정의합니다. 
+
+```java
+import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
+```
+
+Lambda는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를 이용해 메시지를 전달하게 되며, Lex에서 전달한 응답에서 메시지를 추출하여 전달합니다. 
+
+```java
+const text = event.text;
+
+let lexParams = {        
+  botAliasId: process.env.botAliasId,
+  botId: process.env.botId,
+  localeId: process.env.localeId,
+  text: text,
+  sessionId: process.env.sessionId,
+};
+const lexClient = new LexRuntimeV2Client();
+const command = new RecognizeTextCommand(lexParams);
+
+const data = await lexClient.send(command);
+
+return {
+  statusCode: 200,
+  msg: data['messages'][0].content,
+};
+```
+
+
+### Lambda를 이용해 ChatGPT API를 이용하기
 
 [2023년 3월에 ChatGPT의 공식 오픈 API](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)가 공개되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 여기서는 ChatGPT 공식 API와 함께 채팅중 검색을 지원하는 "text-davinci-003" 모델을 사용하는 방법을 설명합니다.
 
@@ -87,6 +119,7 @@ if (res.ok) {
 } 
 ```
 
+<!--
 ```java
 {
     "$metadata": {
@@ -157,7 +190,7 @@ if (res.ok) {
     }
 }
 ```
-
+-->
 
 #### text-davinci-003 모델 사용하기 
 
@@ -198,37 +231,6 @@ return {
   id: result.data.id,
   msg: choices[0].text,
 };    
-```
-
-### Lambda를 이용해 Lex로 메시지 전송하기
-
-서울 리전은 Lex V1을 지원하지 않고, Lev V2만을 지원합니다. 따라서, Lex에 사용자의 입력을 메시지로 전송하기 위해서는 Lex V2의 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용합니다. Lex Runtime V2 client를 아래와 같이 정의합니다. 
-
-```java
-import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
-```
-
-Lambda는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를 이용해 메시지를 전달하게 되며, Lex에서 전달한 응답에서 메시지를 추출하여 전달합니다. 
-
-```java
-const text = event.text;
-
-let lexParams = {        
-  botAliasId: process.env.botAliasId,
-  botId: process.env.botId,
-  localeId: process.env.localeId,
-  text: text,
-  sessionId: process.env.sessionId,
-};
-const lexClient = new LexRuntimeV2Client();
-const command = new RecognizeTextCommand(lexParams);
-
-const data = await lexClient.send(command);
-
-return {
-  statusCode: 200,
-  msg: data['messages'][0].content,
-};
 ```
 
 
