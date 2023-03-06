@@ -59,8 +59,8 @@ for (i=0;i<maxMsgItems;i++) {
     })(i);
 }
 
-calleeName.textContent = "ChatGPT";  
-calleeId.textContent = "OpenAI";
+calleeName.textContent = "Lex";  
+calleeId.textContent = "@amazon.com";
 
 index = 0;
 
@@ -124,7 +124,7 @@ function addSentMessage(text) {
 
 function addReceivedMessage(msg) {
     // console.log("add received message: "+msg);
-    sender = "ChatGPT"
+    sender = "Lex"
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     index++;
@@ -165,7 +165,7 @@ function sendRequest(text) {
             response = JSON.parse(xhr.responseText);
             console.log("response: " + JSON.stringify(response));
             
-            addReceivedMessage(response.body);
+            addReceivedMessage(response.msg);
         }
     };
 

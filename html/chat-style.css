@@ -149,9 +149,6 @@ body {
     margin-right: -20px;
   }
 
-
-
-
   .receive-bubble {
     padding: 10px 14px;
     background: #ddd; 
@@ -252,7 +249,7 @@ body {
 }
 
 .chat-panel {
-  height: 30em;
+  height: 40em;  /* chatroom height */
   overflow: auto;
 }
 

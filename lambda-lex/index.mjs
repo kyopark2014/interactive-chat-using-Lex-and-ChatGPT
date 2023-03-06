@@ -21,14 +21,26 @@ export const handler = async (event) => {
     let response = "";
     try {
       const data = await lexClient.send(command);
-      console.log("response: ", JSON.stringify(data['messages']));
-        
-      const messages = data['messages'][0];
-      console.log('text: ', messages.content);
+      // console.log("response: ", JSON.stringify(data['messages']));
+      console.log("response: ", JSON.stringify(data));
+
+      let sender = "";
+      let msg = "";      
+      if(data['messages']) {
+        sender = 'Lex',
+        msg = data['messages'][0].content;
+      }
+      else {
+        sender = JSON.parse(data).sender;
+        msg = JSON.parse(data).msg;
+      }
+      console.log('sender: ', sender);
+      console.log('msg: ', msg);
 
       response = {
         statusCode: 200,
-        body: messages.content,
+        sender: sender,
+        msg: msg,
       };
     } catch (err) {
       console.log("Error responding to message. ", err);

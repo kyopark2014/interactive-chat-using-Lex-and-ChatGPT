@@ -6,8 +6,11 @@ export const handler = async (event) => {
   console.log('## ENVIRONMENT VARIABLES: ' + JSON.stringify(process.env));
   console.log('## EVENT: ' + JSON.stringify(event));
 
-  const prompt = event.text;
+  const prompt = event.inputTranscript;
   console.log('prompt: ', prompt);
+
+  const intentName = event.interpretations[1].intent.name;
+  console.log('intentName: ', intentName);
 
   let response;
   try {
@@ -30,23 +33,28 @@ export const handler = async (event) => {
       const data = await res.json();
       console.log("output: ", data.choices[0]);
 
-      msg = data.choices[0].message.content;
+      msg = '[ChatGPT] '+data.choices[0].message.content;
       console.log("msg: "+ msg);
-      
-      response = {
-        statusCode: 200,
-        msg: msg
-      };
-    }
-    else {
-      console.log(res);
-      
-      response = {
-        statusCode: 500,
-        body: JSON.stringify(res)
-      };
-    }
 
+      response = {
+        "sessionState": {
+          "dialogAction": {
+            "type": "Close"
+          },
+          "intent": {
+            "confirmationState": "Confirmed",
+            "name": intentName,
+            "state": "Fulfilled",            
+          },          
+        },
+        "messages": [
+          {
+            "contentType": "PlainText",
+            "content": msg,            
+          }
+        ]
+      }
+    } 
   } catch (error) {
     console.log('error: ', error);
 
