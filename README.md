@@ -263,10 +263,101 @@ function sendRequest(text) {
 
 ## AWS CDK로 리소스 생성 준비
 
-CDK 코드 설명
+여기서는 typescript를 이용하여 AWS CDK를 구성합니다. 상세 코드는 [여기(cdk-chatbot-stack.ts)](https://github.com/kyopark2014/interactive-chat-using-Lex-and-ChatGPT/blob/main/cdk-chatbot/lib/cdk-chatbot-stack.ts)에서 확인할 수 있습니다. 
 
+Lex에 대한 Lambda함수는 아래와 같이 정의합니다. environment에 botId, botAliasId를 포함하여야 합니다. 여기서는 한국어로 된 chatbot을 이용하므로 아래와 같이 localeId로 "ko_KR"를 지정합니다. 이 Lambda함수는 Lex와 API Gateway에 대한 퍼미션을 가져야 합니다. 
+
+```java
+// Lambda for lex
+const lambdaLex = new lambda.Function(this, 'lambda-function-lex', {
+  description: 'lambda for chat',
+  functionName: 'lambda-function-lex',
+  handler: 'index.handler',
+  runtime: lambda.Runtime.NODEJS_18_X,
+  code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-lex')),
+  timeout: cdk.Duration.seconds(120),
+  environment: {
+    botId: "BSZQXD0ABN",
+    botAliasId: "TSTALIASID",
+    localeId: "ko_KR", // en_US
+    sessionId: "mysession-01",
+  }
+});     
+const lexPolicy = new iam.PolicyStatement({  
+  actions: ['lex:*'],
+  resources: ['*'],
+});
+lambdaLex.role?.attachInlinePolicy(
+  new iam.Policy(this, 'rekognition-policy', {
+    statements: [lexPolicy],
+  }),
+);
+// permission for api Gateway
+lambdaLex.grantInvoke(new iam.ServicePrincipal('apigateway.amazonaws.com'));    
+```
+
+Lex의 입력은 API Gateway를 이용하여 아래와 같이 "/chat" 리소스로 POST method를 통해 받게 설정합니다. 
+
+```java
+const api = new apiGateway.RestApi(this, 'api-chatbot', {
+  description: 'API Gateway for chatbot',
+  endpointTypes: [apiGateway.EndpointType.REGIONAL],
+  deployOptions: {
+    stageName: stage,
+  },
+});  
+
+const chat = api.root.addResource('chat');
+chat.addMethod('POST', new apiGateway.LambdaIntegration(lambdaLex, {
+  passthroughBehavior: apiGateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
+  credentialsRole: role,
+  integrationResponses: [{
+    statusCode: '200',
+  }], 
+  proxy:false, 
+}), {
+  methodResponses: [   
+    {
+      statusCode: '200',
+      responseModels: {
+        'application/json': apiGateway.Model.EMPTY_MODEL,
+      }, 
+    }
+  ]
+}); 
+```
+
+CORS를 우회하기 위하여 CloudFront에 아래와 같이 "/chat" 리소스에 대한 behavior를 등록합니다. 
+
+```java
+distribution.addBehavior("/chat", new origins.RestApiOrigin(api), {
+  cachePolicy: cloudFront.CachePolicy.CACHING_DISABLED,
+  allowedMethods: cloudFront.AllowedMethods.ALLOW_ALL,  
+  viewerProtocolPolicy: cloudFront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+});
+```
+
+ChatGPT에 텍스트를 전송하여 응답을 받는 Lambda를 아래와 같이 준비합니다. 여기서 OPENAI_API_KEY는 OpenAI에서 발급받은 API Key 입니다. 미리 받은 Key가 없다면 [OpenAI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 입력합니다. 
+
+```java
+const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
+  description: 'lambda for chatgpt',
+  functionName: 'lambda-chatgpt',
+  handler: 'index.handler',
+  runtime: lambda.Runtime.NODEJS_18_X,
+  code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-chatgpt')),
+  timeout: cdk.Duration.seconds(120),
+  environment: {
+    OPENAI_API_KEY: "123456",
+  }
+});   
+```
 
 ## 직접 실습 해보기
+
+### Lex에서 Chatbot의 구현
+
+[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. 
 
 ### Cloud9 개발환경 준비하기 
 
@@ -278,9 +369,6 @@ Cloud9이 생성되면 [Open]후 아래처럼 Terminal을 준비합니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/222941956-65780773-b171-4e12-8b2c-eb76224a735f.png)
 
-### Lex에서 Chatbot의 구현
-
-여기서는 [Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World 봇](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)을 이용하여 대화형 챗봇의 동작을 설명합니다. 
 
 ### CDK로 솔루션 배포하기
 
