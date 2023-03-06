@@ -8,6 +8,7 @@
 
 ![image](https://user-images.githubusercontent.com/52392004/223118356-ff47ed18-de76-403c-ab88-c7583af757bf.png)
 
+상세한 동작은 아래를 참조합니다. 
 
 단계1: 사용자는 CloudFront의 도메인으로 Chatbot 웹페이지를 시도하면, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
 
@@ -482,5 +483,6 @@ cdk destroy
 
 ## 결론
 
-Amazon Lex와 ChatGPT를 이용하여 대화형 Chatbot을 구현하는 방법을 코드와 함께 설명하였습니다. 이를 통해 미리 등록되지 않은 Intent에도 적절한 응답을 사용자에게 줄수 있으므로 사용성을 개선할 수 있습니다. ChatGPT는 현재에도 빠르게 변화하고 있어서 최종적인 형태가 정해져 있지만 향후 동등 또는 동등 이상의 GPT 모델 베이스을 Lex와 함께 사용할 수 있을것으로 기대됩니다. 
+Amazon Lex와 ChatGPT를 이용하여 대화형 Chatbot을 구현하였고 인프라를 효과적으로 개발 및 운용할 수 있도록 AWS CDK를 이용하는 방법을 설명하였습니다. ChatGPT를 이용함으로써 Lex에서 인식되지 못한 의도(Intent)에도 적절한 응답을 사용자에게 줄수 있어서 사용성을 개선할 수 있습니다. ChatGPT는 이미 우수한 대화능력을 증명하였고, 현재 다양한 GPT 모델들이 발표되고 있습니다. 따라서 이러한 인공지능 모델을 Lex와 같은 Chatbot 서비스에 도입함으로써 사용자의 사용성을 개선하고 더 좋은 서비스를 제공할 수 있을것으로 기대됩니다. 
+
 
