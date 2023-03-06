@@ -2,57 +2,37 @@
 
 [Amazon Lex](https://aws.amazon.com/ko/lex/)는 애플리케이션에 대화형 인터페이스를 구축하는 서비스로서 어플리케이션이 대화형 인터페이스를 설계, 구축, 테스트, 배포할 수 있도록 자연어 모델을 사용하는 완전관리형 인공지능(Managed AI) 서비스 입니다. 이와같이 Amazon Lex로 만든 챗봇은 연속적인 대화를 주고받을 수 있도록 의도(Intent)를 파악하여, 해당 의도를 이행하는 데 필요한 정보를 사용자에게 표시할 수 있습니다. 하지만, Amazon Lex에서 파악되지 않은 의도에 대한 답변을 위하여, [Amazon Kendra](https://aws.amazon.com/ko/solutions/partners/quantiphi-lex-kendra/)를 사용할 수 있었는데, 2022년 11월에 [ChatGPT](https://openai.com/blog/chatgpt)가 출시되어 우수한 대화능력을 보여줌으로 인해 Lex와의 조화도 고려해 볼 수 있게 되었습니다.
 
+
+## Chatbot Architecture
+
 여기에서 구현하는 Architecture는 아래와 같습니다. 
 
-![image](https://user-images.githubusercontent.com/52392004/222934173-26d5bbf7-ade3-4293-b4de-5c1e99ff3d1e.png)
-
-## Aamazon Lex의 구현
+![image](https://user-images.githubusercontent.com/52392004/223118356-ff47ed18-de76-403c-ab88-c7583af757bf.png)
 
 
-### Lex에서 Chatbot의 구현
+단계1: 사용자는 CloudFront의 도메인으로 Chatbot 웹페이지를 시도하면, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
 
+단계2: 웹페이지에서 채팅 메시지를 입력합니다. 이때 "/chat"리소스에 POST Method으로 JSON포맷으로된 text 메시지를 Restful 형태로 요청하게 됩니다.
 
-### Lambda를 이용해 Lex로 메시지 전송하기
+단계3: [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)는 API Gateway로 요청을 전송합니다.
 
-서울 리전은 Lex V1을 지원하지 않으므로, Lev V2를 이용하여야 합니다. Lex에 사용자의 입력을 메시지로 전송하기 위하여 Lex V2에서는 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용하므로, Lex Runtime V2 client를 아래와 같이 정의 합니다. 
+단계4: API Gateway는 /chat 리소스에 연결되어 있는 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 호출합니다.
 
-```java
-import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
-```
+단계5: Lambda는 Lex V2 API를 이용하여 채팅 메시지를 Lex에 전달합니다.
 
-Lambda는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를 이용해 메시지를 전달하게 되며, Lex에서 전달한 응답에서 메시지를 추출하여 전달합니다. 
+단계6: Lex는 미리 정의한 Intent가 있는 경우에 해당하는 동작을 수행합니다. Intent에 없는 메시지가 입력시 ChatGPT로 요청을 보냅니다.
 
-```java
-const text = event.text;
+단계7: ChatGPT에서 답변을 하면, 응답이 이전 단계의 역순으로 전달되어서 사용자에게 전달됩니다.
 
-let lexParams = {        
-  botAliasId: process.env.botAliasId,
-  botId: process.env.botId,
-  localeId: process.env.localeId,
-  text: text,
-  sessionId: process.env.sessionId,
-};
-const lexClient = new LexRuntimeV2Client();
-const command = new RecognizeTextCommand(lexParams);
+## 대화형 Chatbot의 구현
 
-const data = await lexClient.send(command);
-const messages = data['messages'][0];
-console.log('text: ', messages.content);
+### ChatGPT API
 
-return {
-  statusCode: 200,
-  body: messages.content,
-};
-```
-
-
-### Lambda를 이용해 ChatGPT에 요청하기 
-
-[2023년 3월에 ChatGPT API가 오픈](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)되어서 Lex와 연동할 수 있게 되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 
+[2023년 3월에 ChatGPT의 공식 오픈 API](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)가 공개되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 여기서는 ChatGPT 공식 API와 함께 채팅중 검색을 지원하는 "text-davinci-003" 모델을 사용하는 방법을 설명합니다.
 
 #### gpt-3.5-turbo 모델 사용하기 
 
-[OpenAI가 제공하는 ChatGPT API](https://platform.openai.com/docs/api-reference/chat)인 "v1/chat/completions"로 HTTPS POST로 요청을 수행합니다. 이를 위해 여기서는 [fetch](https://www.npmjs.com/package/node-fetch)를 사용합니다. 이때 ChatGPT에 전달하는 요청의 header에는 아래와 같이 Authorization과 Content-Type을 포함하여야 합니다. Authorization에 필요한 API Key는 [OpenAI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 환경변수로 저장하여 사용합니다. 메시지 요청시 role은 [ChatGPT API Transition Guide](https://help.openai.com/en/articles/7042661-chatgpt-api-transition-guide)에 따라 "user", "system", "assistant"로 지정할 수 있습니다.
+[OpenAI가 제공하는 ChatGPT API](https://platform.openai.com/docs/api-reference/chat)인 "v1/chat/completions"로 HTTPS POST로 요청을 수행합니다. 이를 위해 여기서는 [fetch](https://www.npmjs.com/package/node-fetch)를 사용합니다. 이때 ChatGPT에 전달하는 요청의 header에는 아래와 같이 Authorization과 Content-Type을 포함하여야 합니다. Authorization에 필요한 API Key는 [OpenAI: API Key](https://platform.openai.com/account/api-keys)에서 발급받아서 환경변수로 저장하여 사용합니다. 메시지 요청시 role은 [ChatGPT API Transition Guide](https://help.openai.com/en/articles/7042661-chatgpt-api-transition-guide)에 따라 "user", "system", "assistant"로 지정할 수 있습니다. 상세 코드는 [여기(index.mjs)](https://github.com/kyopark2014/interactive-chat-using-Lex-and-ChatGPT/blob/main/lambda-chatgpt/index.mjs)에서 확인할 수 있습니다. 
 
 ```java
 import fetch from 'node-fetch';
@@ -73,25 +53,115 @@ const res = await fetch('https://api.openai.com/v1/chat/completions',{
     ],
   }),
 });
+```
 
+ChatGPT가 보내온 응답 메시지를 꺼내서, Lex에 보낼때에는 아래의 포맷으로 전송하여야 합니다. 이때 sessionState에는 dialogAction, intent가 포함하여야 하며, intent name을 입력(event)에서 추출하여 넣어주어야 합니다. 또한 ChatGPT의 응답메시지는 "messages"의 "content"에 넣어서 아래처럼 전달합니다. 
+
+```java
 if (res.ok) {
   const data = await res.json();
   console.log("output: ", data.choices[0]);
 
-  msg = data.choices[0].message.content;
+  msg = '[ChatGPT] '+data.choices[0].message.content;
   console.log("msg: "+ msg);
-      
-  return {
-    statusCode: 200,
-    msg: msg
-  };    
+
+  const intentName = event.interpretations[1].intent.name; // intent name
+  response = {
+    "sessionState": {
+      "dialogAction": {
+        "type": "Close"
+      },
+      "intent": {
+        "confirmationState": "Confirmed",
+        "name": intentName,
+        "state": "Fulfilled",            
+      },          
+    },
+    "messages": [
+      {
+        "contentType": "PlainText",
+        "content": msg,            
+      }
+    ]
+  }
+} 
+```
+
+```java
+{
+    "$metadata": {
+        "httpStatusCode": 200,
+        "requestId": "80c4c62f-06bd-4b14-9369-67d70450c48f",
+        "attempts": 1,
+        "totalRetryDelay": 0
+    },
+    "interpretations": [
+        {
+            "intent": {
+                "confirmationState": "Confirmed",
+                "name": "HelloWorld",
+                "slots": {
+                    "Name": {
+                        "value": {
+                            "interpretedValue": "홍길동",
+                            "originalValue": "홍길동",
+                            "resolvedValues": []
+                        }
+                    }
+                },
+                "state": "Fulfilled"
+            },
+            "nluConfidence": {
+                "score": 1
+            }
+        },
+        {
+            "intent": {
+                "name": "FallbackIntent",
+                "slots": {}
+            }
+        }
+    ],
+    "messages": [
+        {
+            "content": "반갑습니다. 홍길동님.",
+            "contentType": "PlainText"
+        },
+        {
+            "content": "HelloWorld 의도를 종료합니다.",
+            "contentType": "PlainText"
+        }
+    ],
+    "requestAttributes": {},
+    "sessionId": "mysession-01",
+    "sessionState": {
+        "dialogAction": {
+            "type": "Close"
+        },
+        "intent": {
+            "confirmationState": "Confirmed",
+            "name": "HelloWorld",
+            "slots": {
+                "Name": {
+                    "value": {
+                        "interpretedValue": "홍길동",
+                        "originalValue": "홍길동",
+                        "resolvedValues": []
+                    }
+                }
+            },
+            "state": "Fulfilled"
+        },
+        "originatingRequestId": "86123704-a4f7-49d9-bc4e-4a4f247e045e",
+        "sessionAttributes": {}
+    }
 }
 ```
 
 
 #### text-davinci-003 모델 사용하기 
 
-"text-davinci-003" 모델은 [Completion API](https://platform.openai.com/docs/api-reference/completions)에 따라 "v1/completions"을 사용합니다. 여기서는 [OpenAI Node.js Library](https://www.npmjs.com/package/openai)을 이용해 구현합니다. 
+"text-davinci-003" 모델은 [Completion API](https://platform.openai.com/docs/api-reference/completions)에 따라 "v1/completions"을 사용합니다. 여기서는 [OpenAI Node.js Library](https://www.npmjs.com/package/openai)을 이용해 구현합니다. 상세 코드는 [여기(index-davinch.mjs)](https://github.com/kyopark2014/interactive-chat-using-Lex-and-ChatGPT/blob/main/lambda-chatgpt/index-davinch.mjs)에서 확인할 수 있습니다. 
 
 ```java
 import { Configuration, OpenAIApi } from "openai";
@@ -129,6 +199,39 @@ return {
   msg: choices[0].text,
 };    
 ```
+
+### Lambda를 이용해 Lex로 메시지 전송하기
+
+서울 리전은 Lex V1을 지원하지 않고, Lev V2만을 지원합니다. 따라서, Lex에 사용자의 입력을 메시지로 전송하기 위해서는 Lex V2의 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용합니다. Lex Runtime V2 client를 아래와 같이 정의합니다. 
+
+```java
+import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
+```
+
+Lambda는 event에서 text를 분리하여 아래와 같이 botAliasId, botId를 이용해 메시지를 전달하게 되며, Lex에서 전달한 응답에서 메시지를 추출하여 전달합니다. 
+
+```java
+const text = event.text;
+
+let lexParams = {        
+  botAliasId: process.env.botAliasId,
+  botId: process.env.botId,
+  localeId: process.env.localeId,
+  text: text,
+  sessionId: process.env.sessionId,
+};
+const lexClient = new LexRuntimeV2Client();
+const command = new RecognizeTextCommand(lexParams);
+
+const data = await lexClient.send(command);
+
+return {
+  statusCode: 200,
+  msg: data['messages'][0].content,
+};
+```
+
+
 
 ### Client에서 Chat API 활용하기
 
@@ -175,7 +278,9 @@ Cloud9이 생성되면 [Open]후 아래처럼 Terminal을 준비합니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/222941956-65780773-b171-4e12-8b2c-eb76224a735f.png)
 
+### Lex에서 Chatbot의 구현
 
+여기서는 [Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World 봇](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)을 이용하여 대화형 챗봇의 동작을 설명합니다. 
 
 ### CDK로 솔루션 배포하기
 
