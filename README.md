@@ -457,8 +457,7 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 화면 상단의 [Build]를 선택하여 Lambda가 실행되도록 합니다.  
 
-![image](https://user-images.githubusercontent.com/52392004/223214492-90709325-d41f-433c-a7c7-73560297d127.png)
-
+![noname](https://user-images.githubusercontent.com/52392004/223218223-c35fd42f-c75b-445c-aecf-4503aea09ce5.png)
 
 
 이제 WebUrl인 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html"로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 Intent로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄수 있었습니다. 
