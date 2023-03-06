@@ -405,18 +405,19 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### 환경변수 업데이트
 
-Cloud9으로 돌아가서 왼쪽 , "cdk-lex/lib/cdk-lex-stack.ts"에서 아래와 같이 botId, botAliasId, localeId를 업데이트 합니다. 
-
+Cloud9으로 돌아가서 왼쪽 파일탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 아래와 같이 botId, botAliasId, localeId를 업데이트 합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223064111-7bd6f9ae-745b-45df-9c1b-7d38d7351bec.png)
 
-이후 아래처럼 전체 인프라를 설치합니다. UpdateCommend는 "aws s3 cp ../html/lex.js s3://cdklexstack-lexstorage2a9aa7fd-3slmsn6zfwpq"이고, WebUrl은 "https://d3a96z9m2o87mc.cloudfront.net/lex.html"이며, distributionDomainName은 "d3a96z9m2o87mc.cloudfront.net" 입니다. 
-
+이후 아래처럼 전체 인프라를 설치합니다. 
 ```java
 cdk deploy"
 ```
 
 인프라가 모두 설치되면 아래와 같은 결과를 얻습니다. 여기서, 
+
+UpdateCommend는 "aws s3 cp ../html/lex.js s3://cdklexstack-lexstorage2a9aa7fd-3slmsn6zfwpq"이고, WebUrl은 "https://d3a96z9m2o87mc.cloudfront.net/lex.html"이며, distributionDomainName은 "d3a96z9m2o87mc.cloudfront.net" 입니다. 
+
 
 ![noname](https://user-images.githubusercontent.com/52392004/223064980-59c3ea1b-3681-45d6-9a13-8631caf6f3d4.png)
 
