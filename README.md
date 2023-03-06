@@ -409,27 +409,6 @@ Cloud9으로 돌아가서 왼쪽 파일탐색기에서 "interactive-chat-using-L
 
 ![noname](https://user-images.githubusercontent.com/52392004/223064111-7bd6f9ae-745b-45df-9c1b-7d38d7351bec.png)
 
-이후 아래처럼 전체 인프라를 설치합니다. 
-```java
-cdk deploy"
-```
-
-인프라가 모두 설치되면 아래와 같은 결과를 얻습니다. 여기서, 
-
-UpdateCommend는 "aws s3 cp ../html/lex.js s3://cdklexstack-lexstorage2a9aa7fd-3slmsn6zfwpq"이고, WebUrl은 "https://d3a96z9m2o87mc.cloudfront.net/lex.html"이며, distributionDomainName은 "d3a96z9m2o87mc.cloudfront.net" 입니다. 
-
-
-![noname](https://user-images.githubusercontent.com/52392004/223064980-59c3ea1b-3681-45d6-9a13-8631caf6f3d4.png)
-
-
-
-"html/lex.js"에서 아래의 도메인 정보를 distributionDomainName을 이용하여 업데이트하고, UpdateCommend를 이용하여 S3로 업로드합니다.
-
-![noname](https://user-images.githubusercontent.com/52392004/223065821-c3cb3b3d-b8ad-4cfa-a9a5-ac1d9065398e.png)
-
-이후 브라우저에서 WebUrl을 이용해 접속합니다. 
-
-
 
 
 
@@ -455,11 +434,12 @@ cdk deploy
 aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
 ```
 
-이제 WebUrl인 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html"로 접속합니다. 
+
 
 
 ### 실행하기 
 
+이제 WebUrl인 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html"로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 Intent로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄수 있었습니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
@@ -473,3 +453,8 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 ```java
 cdk destroy
 ```
+
+## 결론
+
+Amazon Lex와 ChatGPT를 이용하여 대화형 Chatbot을 구현하는 방법을 코드와 함께 설명하였습니다. 이를 통해 미리 등록되지 않은 Intent에도 적절한 응답을 사용자에게 줄수 있으므로 사용성을 개선할 수 있습니다. ChatGPT는 현재에도 빠르게 변화하고 있어서 최종적인 형태가 정해져 있지만 향후 동등 또는 동등 이상의 GPT 모델 베이스을 Lex와 함께 사용할 수 있을것으로 기대됩니다. 
+
