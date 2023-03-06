@@ -1,4 +1,4 @@
-# Amazon Lex와 ChatGPT를 이용한 대화형 챗봇 구현하기
+# Amazon Lex와 ChatGPT를 이용한 대화형 Chatbot 구현하기
 
 [Amazon Lex](https://aws.amazon.com/ko/lex/)는 애플리케이션에 대화형 인터페이스를 설계, 구축, 테스트, 배포할 수 있도록 자연어 모델을 사용하는 완전관리형 인공지능(Managed AI) 서비스 입니다. 이와같이 Amazon Lex로 만든 챗봇은 연속적인 대화를 주고 받을 수 있도록 의도(Intent)를 파악하여, 해당 의도를 이행하는 데 필요한 정보를 사용자에게 표시할 수 있습니다. 하지만, Amazon Lex에서 파악되지 않은 의도에 대한 답변을 위하여, [Amazon Kendra](https://aws.amazon.com/ko/solutions/partners/quantiphi-lex-kendra/)를 사용할 수 있었는데, 2022년 11월에 [ChatGPT](https://openai.com/blog/chatgpt)가 출시되어 우수한 대화 능력을 보여줌으로 인해, Lex와 ChatGPT를 조합하는것도 가능해졌습니다. 본 게시글에서는 ChatGPT를 이용하여 미리 정의되지 않은 의도(Intent)에 답변을 할 수 있는 대화형 챗봇을 구현하는 방법을 설명하고자 합니다. 
 
