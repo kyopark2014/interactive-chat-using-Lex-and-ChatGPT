@@ -451,7 +451,7 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ![noname](https://user-images.githubusercontent.com/52392004/223212743-056c3f3e-16b1-4590-b60e-fd30376fe2b0.png)
 
-이후 아래로 스크롤하여 Fulfillment에서 [Advanced options]를 선택한후 아래 팝업에서 [Use a Lambda function for fulfillment]을 Enable 합니다. 
+이후 아래로 스크롤하여 Fulfillment에서 [Advanced options]를 선택한 후, 아래 팝업의 [Use a Lambda function for fulfillment]을 Enable 합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223212133-c9d75d6c-96fb-4d9b-8728-c7990e37ec51.png)
 
