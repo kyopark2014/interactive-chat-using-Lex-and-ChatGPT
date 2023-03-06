@@ -390,10 +390,9 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### Lex에서 Chatbot의 구현
 
-[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. 
+[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. "Hello World Bot"은 "안녕"이라고 입력하면, 이름을 물어보고 확인하는 매우 간단한 인사봇입니다. 
 
-
-[Bot Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에 접속해서 "HelloWorldBot"을 선택합니다. 아래와 같이 botId는 "BSZQXD0ABN"임을 알수 있습니다. 
+"Hello World Bot" 생성을 완료한 후에, [Bot Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에 접속해서 "HelloWorldBot"을 선택합니다. 아래와 같이 botId는 "BSZQXD0ABN"임을 알수 있습니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223062399-20861e92-0afb-43b6-bb33-8b10c8f2cee8.png)
 
