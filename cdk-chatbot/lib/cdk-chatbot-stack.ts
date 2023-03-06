@@ -170,7 +170,7 @@ export class CdkChatbotStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(120),
       environment: {
         OPENAI_API_KEY: "123456",
-      }
-    });     
+      } 
+    }); 
   }
 }

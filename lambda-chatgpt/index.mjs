@@ -9,7 +9,7 @@ export const handler = async (event) => {
   const prompt = event.inputTranscript;
   console.log('prompt: ', prompt);
 
-  const intentName = event.interpretations[1].intent.name;
+  const intentName = event.interpretations[0].intent.name;
   console.log('intentName: ', intentName);
 
   let response;
