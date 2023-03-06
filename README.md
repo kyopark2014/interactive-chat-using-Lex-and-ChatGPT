@@ -439,17 +439,21 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ### 실행하기 
 
-이제 WebUrl인 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html"로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 Intent로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄수 있었습니다. 
-
-![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
 [AWS Lex Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에서 아래와 같이 "HellowWorldBot"을 선택하여 [Intents]에서 [FallbackIntent]를 선택합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223212743-056c3f3e-16b1-4590-b60e-fd30376fe2b0.png)
 
-이후 아래로 스크롤하여 Fulfillment에서 
+이후 아래로 스크롤하여 Fulfillment에서 [Advanced options]를 선택한후 아래 팝업에서 [Use a Lambda function for fulfillment]을 Enable 합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223212133-c9d75d6c-96fb-4d9b-8728-c7990e37ec51.png)
+
+
+
+
+이제 WebUrl인 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html"로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 Intent로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄수 있었습니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
 
 ## 리소스 정리하기 
