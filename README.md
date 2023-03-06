@@ -439,8 +439,15 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ### 실행하기 
 
+[AWS Lex Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에서 "HellowWorldBot"을 선택하여 "Aliases"에서 [Languages]를 선택하여 아래처럼 [Korean(South Korea)]를 선택합니다.
 
-[AWS Lex Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에서 아래와 같이 "HellowWorldBot"을 선택하여 [Intents]에서 [FallbackIntent]를 선택합니다. 
+![noname](https://user-images.githubusercontent.com/52392004/223216750-ceebc59e-dacc-4626-81c1-9a58f9b2a5b5.png)
+
+아래처럼 [Souce]로 "lambda-chatgpt"를 선택하고, [Lambda function version or alias]은 "$LATEST"를 선택하고, [Save]를 선택합니다.
+
+![noname](https://user-images.githubusercontent.com/52392004/223217113-5605aff4-f84f-4c7d-8d6b-17056460a5d8.png)
+
+이후 "HellowWorldBot"의 [Intents]에서 아래처럼 [FallbackIntent]를 선택합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223212743-056c3f3e-16b1-4590-b60e-fd30376fe2b0.png)
 
