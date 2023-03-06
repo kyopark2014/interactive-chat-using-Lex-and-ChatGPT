@@ -448,6 +448,9 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ![noname](https://user-images.githubusercontent.com/52392004/223212133-c9d75d6c-96fb-4d9b-8728-c7990e37ec51.png)
 
+화면 상단의 [Build]를 선택하여 Lambda가 실행되도록 합니다.  
+
+![image](https://user-images.githubusercontent.com/52392004/223214492-90709325-d41f-433c-a7c7-73560297d127.png)
 
 
 
