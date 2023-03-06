@@ -355,10 +355,6 @@ const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
 
 ## 직접 실습 해보기
 
-### Lex에서 Chatbot의 구현
-
-[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. 
-
 ### Cloud9 개발환경 준비하기 
 
 편의상 한국리전에서 Cloud9을 이용해여 배포준비를 합니다. Cloud9은 브라우저에서 코드를 작성, 실행 및 디버깅을 할 수 있는 편리한 환경을 제공합니다. [Cloud9 console](https://ap-northeast-2.console.aws.amazon.com/cloud9control/home?region=ap-northeast-2#/)로 진입하여 [Create environment]를 선택한 후에 아래처럼 Name을 입력합니다. 여기서는 "Chatbot"이라고 입력하였습니다. 이후 나머지는 기본값을 유지하고 [Create]를 선택합니다.
@@ -370,7 +366,7 @@ Cloud9이 생성되면 [Open]후 아래처럼 Terminal을 준비합니다.
 ![noname](https://user-images.githubusercontent.com/52392004/222941956-65780773-b171-4e12-8b2c-eb76224a735f.png)
 
 
-### CDK로 솔루션 배포하기
+### 전체 코드 다운로드 및 CDK 배포 준비
 
 아래와 같이 소스를 다운로드합니다.
 
@@ -389,6 +385,52 @@ CDK를 처음 사용하는 경우에는 아래와 같이 bootstrap을 실행하�
 ```java
 cdk bootstrap aws://account-id/ap-northeast-2
 ```
+
+### Lex에서 Chatbot의 구현
+
+[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. 
+
+
+[Bot Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에 접속해서 "HelloWorldBot"을 선택합니다. 아래와 같이 botId는 "BSZQXD0ABN"임을 알수 있습니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/223062399-20861e92-0afb-43b6-bb33-8b10c8f2cee8.png)
+
+"HelloWorldBot"의 [Aliases]를 선택하면 아래와 같이 Aliases를 알 수 있습니다. 여기서는 "TestBotAlias"를 선택합니다. 
+
+![noname](https://user-images.githubusercontent.com/52392004/223062755-28f9f6dc-0e25-4117-9c75-4cea2221e9d5.png)
+
+아래와 같이 botAliasId가 "TSTALIASID"임을 알 수 있습니다.
+
+![noname](https://user-images.githubusercontent.com/52392004/223063139-8b3c78df-fdf0-45b3-ba24-55b1ef33b8c4.png)
+
+### 환경변수 업데이트
+
+Cloud9으로 돌아가서 왼쪽 , "cdk-lex/lib/cdk-lex-stack.ts"에서 아래와 같이 botId, botAliasId, localeId를 업데이트 합니다. 
+
+
+![noname](https://user-images.githubusercontent.com/52392004/223064111-7bd6f9ae-745b-45df-9c1b-7d38d7351bec.png)
+
+이후 아래처럼 전체 인프라를 설치합니다. UpdateCommend는 "aws s3 cp ../html/lex.js s3://cdklexstack-lexstorage2a9aa7fd-3slmsn6zfwpq"이고, WebUrl은 "https://d3a96z9m2o87mc.cloudfront.net/lex.html"이며, distributionDomainName은 "d3a96z9m2o87mc.cloudfront.net" 입니다. 
+
+```java
+cdk deploy"
+```
+
+인프라가 모두 설치되면 아래와 같은 결과를 얻습니다. 여기서, 
+
+![noname](https://user-images.githubusercontent.com/52392004/223064980-59c3ea1b-3681-45d6-9a13-8631caf6f3d4.png)
+
+
+
+"html/lex.js"에서 아래의 도메인 정보를 distributionDomainName을 이용하여 업데이트하고, UpdateCommend를 이용하여 S3로 업로드합니다.
+
+![noname](https://user-images.githubusercontent.com/52392004/223065821-c3cb3b3d-b8ad-4cfa-a9a5-ac1d9065398e.png)
+
+이후 브라우저에서 WebUrl을 이용해 접속합니다. 
+
+
+
+
 
 이제 CDK로 전체 인프라를 생성합니다.
 
