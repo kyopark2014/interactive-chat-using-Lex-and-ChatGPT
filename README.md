@@ -97,7 +97,7 @@ if (res.ok) {
   msg = '[ChatGPT] '+data.choices[0].message.content;
   console.log("msg: "+ msg);
 
-  const intentName = event.interpretations[1].intent.name; // intent name
+  const intentName = event.interpretations[0].intent.name; // intent name
   response = {
     "sessionState": {
       "dialogAction": {
