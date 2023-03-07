@@ -28,7 +28,7 @@
 
 ### Lambda 함수를 이용해 Lex로 메시지 전송하기
 
-서울 리전은 Lex V1을 지원하지 않고, Lev V2만을 지원합니다. 따라서, Lex에 사용자의 입력을 메시지로 전송하기 위해서는 Lex V2의 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용합니다. Lex Runtime V2 client를 아래와 같이 정의합니다. 
+서울 리전은 Lex V1을 지원하지 않고, Lex V2만을 지원합니다. 따라서, Lex에 사용자의 입력을 메시지로 전송하기 위해서는 Lex V2의 [RecognizeText](https://docs.aws.amazon.com/lexv2/latest/APIReference/API_runtime_RecognizeText.html)을 이용합니다. Lex Runtime V2 client를 아래와 같이 정의합니다. 
 
 ```java
 import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
