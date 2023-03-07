@@ -10,7 +10,7 @@
 
 상세한 동작은 아래를 참조합니다. 
 
-단계1: 사용자는 CloudFront의 도메인으로 Chatbot 웹페이지를 시도하면, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
+단계1: 사용자는 CloudFront의 도메인으로 Chatbot 웹페이지를 접속을 시도하여, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
 
 단계2: 웹페이지에서 채팅 메시지를 입력합니다. 이때 "/chat"리소스에 POST Method으로 JSON포맷으로된 text 메시지를 RESTful 형태로 요청하게 됩니다.
 
