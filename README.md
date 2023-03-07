@@ -1,10 +1,10 @@
 # Amazon Lex와 ChatGPT를 이용한 대화형 Chatbot 구현하기
 
-[Amazon Lex](https://aws.amazon.com/ko/lex/)는 애플리케이션에 대화형 인터페이스를 설계, 구축, 테스트, 배포할 수 있도록 자연어 모델을 사용하는 완전관리형 인공지능(Managed AI) 서비스 입니다. 이와같이 Amazon Lex로 만든 챗봇은 연속적인 대화를 주고 받을 수 있도록 의도(Intent)를 파악하여, 해당 의도를 이행하는 데 필요한 정보를 사용자에게 표시할 수 있습니다. 또한, Amazon Lex에서 파악되지 않은 의도에 대한 답변을 위하여, [Amazon Kendra](https://aws.amazon.com/ko/solutions/partners/quantiphi-lex-kendra/)를 사용할 수 있습니다. 2022년 11월에 [ChatGPT](https://openai.com/blog/chatgpt)가 출시되어 우수한 대화 능력을 보여줌으로 인해, Lex와 ChatGPT를 조합하는것도 가능해졌습니다. 본 게시글에서는 ChatGPT를 이용하여 미리 정의되지 않은 의도(Intent)에 답변을 할 수 있는 대화형 챗봇을 구현하는 방법을 설명하고자 합니다. 
+[Amazon Lex](https://aws.amazon.com/ko/lex/)는 애플리케이션에 대화형 인터페이스를 설계, 구축, 테스트, 배포할 수 있도록 자연어 모델을 사용하는 완전관리형 인공지능(Managed AI) 서비스 입니다. 이와같이 Amazon Lex로 만든 chatbot은 연속적인 대화를 주고 받을 수 있도록 의도(intent)를 파악하여, 해당 의도를 이행하는 데 필요한 정보를 사용자에게 표시할 수 있습니다. 또한, Amazon Lex에서 파악되지 않은 의도에 대한 답변을 위하여, [Amazon Kendra](https://aws.amazon.com/ko/solutions/partners/quantiphi-lex-kendra/)를 사용할 수 있습니다. 2022년 11월에 [ChatGPT](https://openai.com/blog/chatgpt)가 출시되어 우수한 대화 능력을 보여줌으로 인해, Kendra 뿐 아니라 ChatGPT를 사용하는것도 가능해졌습니다. 본 게시글에서는 ChatGPT를 이용하여 미리 정의되지 않은 의도(intent)에 답변을 할 수 있는 대화형 chatbot을 구현하는 방법을 설명하고자 합니다. 
 
 ## Chatbot Architecture
 
-여기에서 구현하는 Architecture는 아래와 같습니다. [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)를 이용하여 채팅을 위한 웹페이지를 제공합니다. 사용자가 입력한 채팅 메시지는 [Amazon API Gateway](https://aws.amazon.com/ko/api-gateway/)와 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 이용해 Lex에서 의도(Intent)를 파악후 답변을 합니다. 그런데, Lex에서 인식되지 못한 의도가 있다면 Lambda 함수를 이용하여 ChatGPT에 질의를 하고, 그 결과를 채팅창에 표시하게 됩니다. 이러한 대화형 Chatbot을 구성하기 위한 인프라는 [AWS CDK](https://aws.amazon.com/ko/cdk/)를 이용해 생성 및 관리됩니다. 모든 인프라는 [서비리스(Serverless)](https://aws.amazon.com/ko/serverless/)로  구성되므로 유지보수면에서 효율적이며 변동하는 트래픽에도 자동 확장(Auto Scaling)을 통해 안정적으로 시스템을 운용할 수 있습니다.
+여기에서 구현하는 Architecture는 아래와 같습니다. [Amazon CloudFront](https://aws.amazon.com/ko/cloudfront/)를 이용하여 채팅을 위한 웹페이지를 제공합니다. 사용자가 입력한 채팅 메시지는 [Amazon API Gateway](https://aws.amazon.com/ko/api-gateway/)와 [AWS Lambda](https://aws.amazon.com/ko/lambda/)를 이용해 Lex에서 의도(intent)를 파악후 답변을 합니다. 그런데, Lex에서 인식되지 못한 의도가 있다면 Lambda 함수를 이용하여 ChatGPT에 질의를 하고, 그 결과를 채팅창에 표시하게 됩니다. 이러한 대화형 Chatbot을 구성하기 위한 인프라는 [AWS CDK](https://aws.amazon.com/ko/cdk/)를 이용해 생성 및 관리됩니다. 모든 인프라는 [서비리스(Serverless)](https://aws.amazon.com/ko/serverless/)로 구성되므로 유지보수면에서 효율적이며 변동하는 트래픽에도 자동 확장(Auto Scaling)을 통해 안정적으로 시스템을 운용할 수 있습니다.
 
 ![image](https://user-images.githubusercontent.com/52392004/223118356-ff47ed18-de76-403c-ab88-c7583af757bf.png)
 
@@ -12,7 +12,7 @@
 
 단계1: 사용자는 CloudFront의 도메인으로 Chatbot 웹페이지를 시도하면, S3에 저장된 HTML, CSS, Javascript를 로드합니다.
 
-단계2: 웹페이지에서 채팅 메시지를 입력합니다. 이때 "/chat"리소스에 POST Method으로 JSON포맷으로된 text 메시지를 Restful 형태로 요청하게 됩니다.
+단계2: 웹페이지에서 채팅 메시지를 입력합니다. 이때 "/chat"리소스에 POST Method으로 JSON포맷으로된 text 메시지를 RESTful 형태로 요청하게 됩니다.
 
 단계3: CloudFront는 API Gateway로 요청을 전송합니다.
 
@@ -20,7 +20,7 @@
 
 단계5: Lambda 함수는 Lex V2 API를 이용하여 채팅 메시지를 Lex에 전달합니다.
 
-단계6: Lex는 미리 정의한 Intent가 있는 경우에 해당하는 동작을 수행합니다. Intent에 없는 메시지가 입력시 ChatGPT로 요청을 보냅니다.
+단계6: Lex는 미리 정의한 의도(intent)가 있는 경우에 해당하는 동작을 수행합니다. 의도를 인식할 수 없는 메시지라면, ChatGPT로 문의하는 요청을 보냅니다.
 
 단계7: ChatGPT에서 답변을 하면, 응답이 이전 단계의 역순으로 전달되어서 사용자에게 전달됩니다.
 
@@ -58,7 +58,7 @@ return {
 ```
 
 
-### Lambda 를 이용해 ChatGPT API를 이용하기
+### Lambda 함수를 이용해 ChatGPT API를 이용하기
 
 [2023년 3월에 ChatGPT의 공식 오픈 API](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)가 공개되었습니다. 새로운 API의 경로는  "/v1/chat/completions"이며, "gpt-3.5-turbo" 모델을 사용합니다. 이 모델은 기존 모델인 "text-davinci-003"에 비하여, 90% 낮은 비용으로 활용할 수 있으나 ChatGPT에서 날씨를 검색한거나 하는 작업은 할 수 없습니다. 여기서는 ChatGPT 공식 API와 함께 채팅중 검색을 지원하는 "text-davinci-003" 모델을 사용하는 방법을 설명합니다.
 
@@ -237,7 +237,7 @@ return {
 
 ### Client에서 Chat API 활용하기
 
-[chat.js](https://github.com/kyopark2014/ChatGPT/blob/main/html/chat.js)와 같이 Client는 Chat 서버에 RESTful 방식으로 아래와 같이 채팅 메시지를 전송하고 응답이 오면 수신 채팅 버블에 표시 합니다. 여기서 채팅서버의 주소는 CloudFront의 도메인입니다. 
+Client는 Chat 서버에 RESTful 방식으로 아래와 같이 채팅 메시지를 전송하고 응답이 오면 수신 채팅 버블에 표시 합니다. 여기서 채팅서버의 주소는 CloudFront의 도메인입니다. 상세코드는 [여기(chat.js)](https://github.com/kyopark2014/ChatGPT/blob/main/html/chat.js)에서 확인합니다.
 
 ```java
 function sendRequest(text) {
@@ -329,7 +329,7 @@ chat.addMethod('POST', new apiGateway.LambdaIntegration(lambdaLex, {
 }); 
 ```
 
-CORS를 우회하기 위하여 CloudFront에 아래와 같이 "/chat" 리소스에 대한 behavior를 등록합니다. 
+[CORS]()를 우회하기 위하여 CloudFront에 아래와 같이 "/chat" 리소스에 대한 behavior를 등록합니다. 
 
 ```java
 distribution.addBehavior("/chat", new origins.RestApiOrigin(api), {
