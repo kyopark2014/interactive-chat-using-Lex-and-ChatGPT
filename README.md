@@ -329,7 +329,7 @@ chat.addMethod('POST', new apiGateway.LambdaIntegration(lambdaLex, {
 }); 
 ```
 
-[CORS]()를 우회하기 위하여 CloudFront에 아래와 같이 "/chat" 리소스에 대한 behavior를 등록합니다. 
+[CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)를 우회하기 위하여 CloudFront에 아래와 같이 "/chat" 리소스에 대한 behavior를 등록합니다. 
 
 ```java
 distribution.addBehavior("/chat", new origins.RestApiOrigin(api), {
@@ -376,7 +376,7 @@ Cloud9이 생성되면 [Open]후 아래처럼 Terminal을 준비합니다.
 git clone https://github.com/kyopark2014/interactive-chat-using-Lex-and-ChatGPT
 ```
 
-cdk 폴더로 이동하여 필요한 라이브러리를 설치합니다. 여기서 aws-cdk-lib은 CDK 2.0 라이브러리입니다.
+CDK 폴더로 이동하여 필요한 라이브러리를 설치합니다. 여기서 aws-cdk-lib은 CDK 2.0 라이브러리입니다.
 
 ```java
 cd interactive-chat-using-Lex-and-ChatGPT/cdk-chatbot && npm install aws-cdk-lib@2.64.0 path
@@ -390,7 +390,7 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### Lex에서 Chatbot의 구현
 
-[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. "Hello World Bot"은 "안녕"이라고 입력하면, 이름을 물어보고 확인하는 매우 간단한 인사봇입니다. 
+[Amazon Lex 한국어 챗봇 빌드 워크숍](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/README.md)의 [Hello World Bot](https://github.com/aws-samples/aws-ai-ml-workshop-kr/blob/master/aiservices/lex-korean-workshop/HelloWorldBot.md)에 따라 HelloWorld Bot을 생성합니다. "Hello World Bot"은 "안녕"이라고 입력하면, 이름을 물어보고 확인하는 간단한 인사봇입니다. 
 
 "Hello World Bot" 생성을 완료한 후에, [Bot Console](https://ap-northeast-2.console.aws.amazon.com/lexv2/home?region=ap-northeast-2#bots)에 접속해서 "HelloWorldBot"을 선택합니다. 아래와 같이 botId는 "BSZQXD0ABN"임을 알수 있습니다. 
 
@@ -406,7 +406,7 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### 환경변수 업데이트
 
-Cloud9으로 돌아가서 왼쪽 파일탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId, localeId를 업데이트 합니다. 
+Cloud9으로 돌아가서 왼쪽 파일 탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId, localeId를 업데이트 합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223222609-e2dae835-66cb-4ae2-a3f8-d094c4afe6f4.png)
 
@@ -468,7 +468,7 @@ aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5
 
 ### 실행하기 
 
-WebUrl의 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 으로 브라우저에서 채팅화면으로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 Intent로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄수 있었습니다. 
+WebUrl의 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 으로 브라우저에서 채팅화면으로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫 입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 의도(intent)로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄 수 있었습니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
@@ -483,6 +483,6 @@ cdk destroy
 
 ## 결론
 
-Amazon Lex와 ChatGPT를 이용하여 대화형 Chatbot을 구현하였고 인프라를 효과적으로 개발 및 운용할 수 있도록 AWS CDK를 이용하는 방법을 설명하였습니다. ChatGPT를 이용함으로써 Lex에서 인식되지 못한 의도(Intent)에도 적절한 응답을 사용자에게 줄수 있어서 사용성을 개선할 수 있습니다. ChatGPT는 이미 우수한 대화능력을 증명하였고, 현재 다양한 GPT 모델들이 발표되고 있습니다. 따라서 이러한 인공지능 모델을 Lex와 같은 Chatbot 서비스에 도입함으로써 사용자의 사용성을 개선하고 더 좋은 서비스를 제공할 수 있을것으로 기대됩니다. 
+Amazon Lex와 ChatGPT를 이용하여 대화형 Chatbot을 구현하였고 인프라를 효과적으로 개발 및 운용할 수 있도록 AWS CDK를 이용하는 방법을 설명하였습니다. ChatGPT를 이용함으로써 Lex에서 인식되지 못한 의도(intent)에도 적절한 응답을 사용자에게 줄수 있어서 사용성을 개선할 수 있습니다. ChatGPT는 이미 우수한 대화능력을 증명하였고, 현재 다양한 GPT 모델들이 발표되고 있습니다. 따라서 이러한 인공지능 모델을 Lex와 같은 Chatbot 서비스에 도입함으로써 사용자의 사용성을 개선하고 더 좋은 서비스를 제공할 수 있을것으로 기대됩니다. 
 
 
