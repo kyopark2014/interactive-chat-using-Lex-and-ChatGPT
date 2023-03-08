@@ -106,8 +106,12 @@ function addReceivedMessage(msg) {
 function addNotifyMessage(msg) {
     index++;
 
-    msglist[index].innerHTML =  
-        `<div class="notification-text">${msg}</div>`;     
+    callLogList[index] = `<div class="notification-text">${msg}</div>`;     
+
+    if(index < maxMsgItems)
+        msglist[index].innerHTML = callLogList[index];
+    else 
+        updateChatWindow();        
 }
 
 refreshChatWindow.addEventListener('click', function(){
