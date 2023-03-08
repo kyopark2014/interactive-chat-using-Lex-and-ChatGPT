@@ -6,46 +6,13 @@ const sendBtn = document.querySelector('#sendBtn');
 const message = document.querySelector('#chatInput')
 const chatPanel = document.querySelector('#chatPanel');
 
-HashMap = function() {
-    this.map = new Array();
-};
-
-HashMap.prototype = {
-    put: function(key, value) {
-        this.map[key] = value;
-    },
-    get: function(key) {
-        return this.map[key];
-    },
-    getAll: function() {
-        return this.map;
-    },
-    clear: function() {
-        return this.map;
-    },
-    isEmpty: function() {
-        return (this.map.size()==0);
-    },
-    remove: function(key) {
-        delete this.map[key];
-    },
-    getKeys: function() {
-        var keys = new Array();
-        for(i in this.map) {
-            keys.push(i);
-        }
-        return keys;
-    }
-};
-
 // message log list
 var msglist = [];
-var maxMsgItems = 50;
-var msgHistory = new HashMap();
-var callee = "John";
+var callLogList = []
+var maxMsgItems = 10;
 var index=0;
 
-for (i=0;i<maxMsgItems;i++) {
+for (let i=0;i<maxMsgItems;i++) {
     msglist.push(document.getElementById('msgLog'+i));
 
     // add listener        
@@ -75,7 +42,7 @@ message.addEventListener('keyup', function(e){
 
 refreshChatWindow.addEventListener('click', function(){
     console.log('update chat window');
-    updateChatWindow(callee);
+    updateChatWindow();
 });
 
 sendBtn.addEventListener('click', onSend);
@@ -92,18 +59,11 @@ function onSend(e) {
     message.value = "";
 }
 
-function uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-}
-
 (function() {
     window.addEventListener("focus", function() {
-//        console.log("Back to front");
+        console.log("Back to front");
 
-        if(msgHistory.get(callee))
-            updateCallLogToDisplayed();
+        updateChatWindow();
     })
 })();
 
@@ -114,8 +74,12 @@ function addSentMessage(text) {
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     index++;
 
-    msglist[index].innerHTML = 
-        `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;   
+    callLogList[index] = `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;
+
+    if(index < maxMsgItems)
+        msglist[index].innerHTML = callLogList[index];
+    else 
+        updateChatWindow();
 
     chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 
@@ -124,13 +88,17 @@ function addSentMessage(text) {
 
 function addReceivedMessage(msg) {
     // console.log("add received message: "+msg);
-    sender = "Lex"
+    let sender = "Lex"
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     index++;
 
-    // msglist[index].innerHTML =  `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1><h2>${timestr}</h2>${msg}&nbsp;</div>`;     
-    msglist[index].innerHTML = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;  
+    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
+
+    if(index < maxMsgItems)
+        msglist[index].innerHTML = callLogList[index];
+    else 
+        updateChatWindow();
 
     chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 }
@@ -144,7 +112,8 @@ function addNotifyMessage(msg) {
 
 refreshChatWindow.addEventListener('click', function(){
     console.log('update chat window');
-    // updateChatWindow(callee);
+    
+    updateChatWindow();
 });
 
 attachFile.addEventListener('click', function(){
@@ -162,10 +131,11 @@ function sendRequest(text) {
     xhr.open("POST", uri, true);
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            response = JSON.parse(xhr.responseText);
+            let response = JSON.parse(xhr.responseText);
             console.log("response: " + JSON.stringify(response));
             
-            addReceivedMessage(response.msg);
+            if(response.statusCode == 200)
+                addReceivedMessage(response.msg);
         }
     };
 
@@ -175,4 +145,25 @@ function sendRequest(text) {
     var blob = new Blob([JSON.stringify(requestObj)], {type: 'application/json'});
 
     xhr.send(blob);
+}
+
+function updateChatWindow() {
+    // clear chat window
+    for (i=0;i<maxMsgItems;i++) {
+        msglist[i].innerHTML = '';
+    }
+
+    // update
+    if(index < maxMsgItems) {
+        for(i=0;i<=index;i++) {
+            msglist[i].innerHTML = callLogList[i];
+        }        
+    }
+    else {        
+        for(i=0;i<maxMsgItems;i++) {
+            msglist[i].innerHTML = callLogList[i+(index-maxMsgItems+1)];
+        }    
+    }
+    
+    chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 }

@@ -21,7 +21,7 @@ export const handler = async (event) => {
     let response = "";
     try {
       const data = await lexClient.send(command);
-      console.log("response: ", JSON.stringify(data['messages']));
+      console.log("response: ", JSON.stringify(data));
 
       response = {
         statusCode: 200,
