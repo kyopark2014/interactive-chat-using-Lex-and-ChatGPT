@@ -359,7 +359,7 @@ const lambdachat = new lambda.Function(this, 'lambda-chatgpt', {
 
 ### Cloud9 개발환경 준비하기 
 
-편의상 한국리전에서 Cloud9을 이용해여 배포준비를 합니다. Cloud9은 브라우저에서 코드를 작성, 실행 및 디버깅을 할 수 있는 편리한 환경을 제공합니다. [Cloud9 console](https://ap-northeast-2.console.aws.amazon.com/cloud9control/home?region=ap-northeast-2#/)로 진입하여 [Create environment]를 선택한 후에 아래처럼 Name을 입력합니다. 여기서는 "Chatbot"이라고 입력하였습니다. 이후 나머지는 기본값을 유지하고 [Create]를 선택합니다.
+편의상 서울 리전에서 Cloud9을 이용해여 배포준비를 합니다. Cloud9은 브라우저에서 코드를 작성, 실행 및 디버깅을 할 수 있는 편리한 환경을 제공합니다. [Cloud9 console](https://ap-northeast-2.console.aws.amazon.com/cloud9control/home?region=ap-northeast-2#/)로 진입하여 [Create environment]를 선택한 후에 아래처럼 Name을 입력합니다. 여기서는 "Chatbot"이라고 입력하였습니다. 이후 나머지는 기본값을 유지하고 [Create]를 선택합니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/222941890-f1615f9b-42cf-4c1c-b5db-bc358ee98ef3.png)
 
