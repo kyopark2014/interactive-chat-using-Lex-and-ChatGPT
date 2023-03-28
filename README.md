@@ -241,7 +241,7 @@ Client는 Chat 서버에 RESTful 방식으로 아래와 같이 채팅 메시지�
 
 ```java
 function sendRequest(text) {
-    const uri = "https://dre57i7noiw1a.cloudfront.net/chat";
+    const uri = "/chat";
     const xhr = new XMLHttpRequest();
 
     xhr.open("POST", uri, true);
@@ -379,7 +379,7 @@ git clone https://github.com/kyopark2014/interactive-chat-using-Lex-and-ChatGPT
 CDK 폴더로 이동하여 필요한 라이브러리를 설치합니다. 여기서 aws-cdk-lib은 CDK 2.0 라이브러리입니다.
 
 ```java
-cd interactive-chat-using-Lex-and-ChatGPT/cdk-chatbot && npm install aws-cdk-lib@2.64.0 path
+cd interactive-chat-using-Lex-and-ChatGPT/cdk-chatbot && npm install
 ```
 
 CDK를 처음 사용하는 경우에는 아래와 같이 bootstrap을 실행하여야 합니다. 여기서 account-id은 12자리의 Account Number를 의미합니다. AWS 콘솔화면에서 확인하거나, "aws sts get-caller-identity --query account-id --output text" 명령어로 확인할 수 있습니다.
@@ -406,7 +406,7 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### 환경변수 업데이트
 
-Cloud9으로 돌아가서 왼쪽 파일 탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId, localeId를 업데이트 합니다. 
+Cloud9으로 돌아가서 왼쪽 파일 탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId를 업데이트 합니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223222609-e2dae835-66cb-4ae2-a3f8-d094c4afe6f4.png)
 
@@ -425,23 +425,11 @@ Cloud9으로 돌아가서 왼쪽 파일 탐색기에서 "interactive-chat-using-
 cdk deploy
 ```
 
-정상적으로 설치가 되면 아래와 같은 "Output"이 보여집니다. 여기서 distributionDomainName은 "d3ndv6lhze8yc5.cloudfront.net"이고, WebUrl은 "https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 이며, UpdateCommend은 "aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn"입니다. 
+정상적으로 설치가 되면 아래와 같은 "Output"이 보여집니다. 여기서 distributionDomainName은 "d3ndv6lhze8yc5.cloudfront.net"이고, WebUrl은 "https://d3ndv6lhze8yc5.cloudfront.net/chat.html"임을 알 수 있습니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/222942854-065a36a8-ee7d-4a92-b7e3-9a5fbaee105d.png)
 
 
-### Javascript의 도메인 주소 업데이트하기
-
-"html/chat.js"를 열어서, 아래와 같이 url 주소를 업데이트합니다. 여기에서는 도메인 이름으로 distributionDomainName인 "d3ndv6lhze8yc5.cloudfront.net"을 입력합니다.
-
-![noname](https://user-images.githubusercontent.com/52392004/222943096-11918479-ba6c-4605-aea8-f92eb729367e.png)
-
-
-이제 수정한 chat.js 파일을 아래와 같이 S3 bucket에 복사합니다. 이때의 명령어는 UpdateCommend를 참고합니다.
-
-```java
-aws s3 cp ../html/chat.js s3://cdkchatbotstack-chatbotstoragef9db61b9-1mn56n3yu5tn
-```
 
 ### Lex에서 Lambda 함수로 ChatGPT를 호출하도록 설정하기
 
