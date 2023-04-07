@@ -406,7 +406,7 @@ cdk bootstrap aws://account-id/ap-northeast-2
 
 ### 환경변수 업데이트
 
-Cloud9으로 돌아가서 왼쪽 파일 탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId를 업데이트 합니다. 
+Cloud9으로 돌아가서 왼쪽 파일 탐색기에서 "interactive-chat-using-Lex-and-ChatGPT/cdk-lex/lib/cdk-lex-stack.ts"을 열어서 "Lambda for lex"의 Environment의 botId, botAliasId를 업데이트 합니다. 여기서 sessionId는 현재의 값을 유지하거나 임의의 값을 입력합니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/223222609-e2dae835-66cb-4ae2-a3f8-d094c4afe6f4.png)
 
@@ -456,7 +456,7 @@ cdk deploy
 
 ### 실행하기 
 
-WebUrl의 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 으로 브라우저에서 채팅화면으로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫 입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 의도(intent)로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄 수 있었습니다. 
+WebUrl의 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 으로 브라우저에서 채팅화면으로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫 입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 의도(intent)로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄 수 있었습니다. ChatGPT 응답은 OpenAI 서버의 응답속도에 따라 지연될 수 있습니다.
 
 ![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
