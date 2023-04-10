@@ -12,9 +12,11 @@ let callLogList = []
 let maxMsgItems = 10;
 let index=0;
 let msgIdList = [];
+let isFailed = [];
 
 for (let i=0;i<maxMsgItems;i++) {
     msglist.push(document.getElementById('msgLog'+i));
+    isFailed[i] = false;
 
     // add listener        
     (function(index) {
@@ -23,10 +25,12 @@ for (let i=0;i<maxMsgItems;i++) {
             // else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
-            //console.log('i: '+i);
+
+            if(isFailed[index]) {
                 let msgId = msgIdList[index];
                 console.log('retry the failed request: ', msgId);
                 retryRequest(msgId, index);
+            }
         })
     })(i);
 }
