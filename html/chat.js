@@ -24,8 +24,10 @@ for (let i=0;i<maxMsgItems;i++) {
             else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
-
+            
             if(msgResponse[index] != 200) {
+                console.log('previous response: '+msgResponse[index]);
+
                 let msgId = msgIdList[i];
                 console.log('retry the failed request: ', msgId);
                 retryRequest(msgId, i);
