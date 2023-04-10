@@ -146,14 +146,10 @@ function sendRequest(text) {
         }
         else if(xhr.status ===  504) {
             console.log("Retry! msgId: " + msgId);
-
-            let result = queryResult(msgId);
-
-            console.log("query result: " + result);
             
-            /*setTimeout(function() {
+            setTimeout(function() {
                 queryResult(msgId);
-              }, 3000); */
+              }, 10000); 
         }
     };
 
