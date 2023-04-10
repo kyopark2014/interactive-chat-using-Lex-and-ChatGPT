@@ -33,7 +33,7 @@ export const handler = async (event) => {
       const data = await res.json();
       console.log("output: ", data.choices[0]);
 
-      msg = '[ChatGPT] '+data.choices[0].message.content;
+      msg = `[ChatGPT] ${data.choices[0].message.content}`;
       console.log("msg: "+ msg);
 
       response = {
