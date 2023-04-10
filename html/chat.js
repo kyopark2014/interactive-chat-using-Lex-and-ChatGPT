@@ -143,6 +143,8 @@ function sendRequest(text) {
             
             if(response.statusCode == 200)
                 addReceivedMessage(response.msg);
+
+            queryResult(msgId);                
         }
         else if(xhr.status ===  504) {
             console.log("msgId: " + msgId);
@@ -179,7 +181,7 @@ function queryResult(msgId) {
             if(response.statusCode == 200)
                 addReceivedMessage(response.msg);
         }
-        else if(xhr.status ===  504) {
+        else if(xhr.status ===  500) {
             console.log("msgId: " + msgId);
             console.log("timeout failure!");
         }

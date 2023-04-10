@@ -1,9 +1,6 @@
 import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
-//import * as DynamoDB from "@aws-sdk/client-dynamodb";
-//const dynamo = new AWS.DynamoDB({ region: "REGION" });
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
-// const aws = require('aws-sdk');
 const dynamo = new DynamoDBClient();
 const tableName = process.env.tableName;
 
@@ -13,6 +10,7 @@ export const handler = async (event) => {
 
     const text = event.text;
     const msgId = event.msgId;
+    let isCompleted = false;
 
     let lexParams = {        
         botAliasId: process.env.botAliasId,
@@ -36,15 +34,15 @@ export const handler = async (event) => {
       };
 
       // store the msgId and response
-      const current = new Date();  
-      const expirationTime = new Date(current.getTime() + 300); // 5min 
+      let date = new Date();
+      const expirationTime = date.getTime()+300;
 
       var dbParams = {
         TableName: tableName,
         Item: {
           msgId: { S: msgId },
           result: { S: data['messages'][0].content},
-          ttl: { N: expirationTime } 
+          ttl: { N: '' +expirationTime } 
         },
       };
       console.log('dbParams: ' + JSON.stringify(dbParams));
@@ -52,19 +50,11 @@ export const handler = async (event) => {
       try {
         const data = await dynamo.send(new PutItemCommand(dbParams));
         console.log(data);
+        
+        isCompleted = true;
       } catch (err) {
         console.error(err);
       }
-
-    /*  dynamo.put
-      dynamo.put(dbParams, function (err, data) {
-          if (err) {
-              console.log('Failure: ' + err);
-          }
-          else {
-              console.log('dynamodb put result: ' + JSON.stringify(data));
-          }
-      }); */
     } catch (err) {
       console.log("Error responding to message. ", err);
 
@@ -74,6 +64,22 @@ export const handler = async (event) => {
       };
     }
     console.log('response: ', JSON.stringify(response));
+    
+    function wait() {
+        return new Promise((resolve, reject) => {
+            if (!isCompleted) {
+                setTimeout(() => resolve("wait..."), 1000);
+            }
+            else {
+                setTimeout(() => resolve("done..."), 0);
+            }
+        });
+    }
+    console.log(await wait());
+    console.log(await wait());
+    console.log(await wait());
+    console.log(await wait());
+    console.log(await wait());
 
     return response;
 };
