@@ -43,7 +43,6 @@ calleeId.textContent = "@amazon.com";
 index = 0;
 
 addNotifyMessage("start the interractive chat");
-index++;
 
 // Listeners
 message.addEventListener('keyup', function(e){
@@ -158,7 +157,7 @@ function sendRequest(text) {
             if(response.statusCode == 200 && response.msg) {
                 index++;
                 addReceivedMessage(response.msg);
-                
+
                 msgIdList[index] = msgId;
                 msgResponse[index] = xhr.status;
             }
