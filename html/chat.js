@@ -147,12 +147,46 @@ function sendRequest(text) {
         else if(xhr.status ===  504) {
             console.log("msgId: " + msgId);
             console.log("timeout failure!");
+
+            queryResult(msgId);
         }
     };
 
     let requestObj = {
         "msgId": msgId,
         "text":text
+    };
+    console.log("request: " + JSON.stringify(requestObj));
+
+    let blob = new Blob([JSON.stringify(requestObj)], {type: 'application/json'});
+
+    xhr.send(blob);
+}
+
+function queryResult(msgId) {
+    const uri = "/query";
+    const xhr = new XMLHttpRequest();
+    console.log("msgId: " + msgId);
+
+    xhr.open("POST", uri, true);
+    xhr.onreadystatechange = () => {
+        console.log("xhr.status: ", xhr.status);
+
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            let response = JSON.parse(xhr.responseText);
+            console.log("response: " + JSON.stringify(response));
+            
+            if(response.statusCode == 200)
+                addReceivedMessage(response.msg);
+        }
+        else if(xhr.status ===  504) {
+            console.log("msgId: " + msgId);
+            console.log("timeout failure!");
+        }
+    };
+
+    let requestObj = {
+        "msgId": msgId,
     };
     console.log("request: " + JSON.stringify(requestObj));
 
