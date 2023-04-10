@@ -148,22 +148,24 @@ function sendRequest(text) {
             console.log("msgId: " + msgId);
             console.log("response: " + JSON.stringify(response));
 
-            if(response.statusCode == 200 && response.msg) {
-                index++;
+            if(response.statusCode == 200 && response.msg) {                
                 addReceivedMessage(response.msg);
 
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
+
+                index++;
             }
         }
         else if(xhr.status ===  504) {
             console.log("Retry! msgId: " + msgId);            
-
-            index++;
+            
             addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
 
             msgIdList[index] = msgId;
             console.log('msgIdList['+index+']: '+msgId);
+
+            index++;
         }
     };
 
