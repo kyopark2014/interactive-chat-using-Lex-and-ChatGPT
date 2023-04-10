@@ -94,7 +94,7 @@ if (res.ok) {
   const data = await res.json();
   console.log("output: ", data.choices[0]);
 
-  msg = '[ChatGPT] '+data.choices[0].message.content;
+  msg = `[ChatGPT] ${data.choices[0].message.content}`;
   console.log("msg: "+ msg);
 
   const intentName = event.interpretations[0].intent.name; // intent name
