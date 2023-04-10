@@ -158,6 +158,8 @@ function sendRequest(text) {
             if(response.statusCode == 200 && response.msg) {
                 index++;
                 addReceivedMessage(response.msg);
+                
+                msgIdList[index] = msgId;
                 msgResponse[index] = xhr.status;
             }
         }
