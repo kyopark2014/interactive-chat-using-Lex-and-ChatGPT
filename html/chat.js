@@ -131,25 +131,32 @@ attachFile.addEventListener('click', function(){
 function sendRequest(text) {
     const uri = "/chat";
     const xhr = new XMLHttpRequest();
+    const msgId = uuidv4();
+    console.log("msgId: " + msgId);
 
     xhr.open("POST", uri, true);
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
             let response = JSON.parse(xhr.responseText);
+            console.log("msgId: " + msgId);
             console.log("response: " + JSON.stringify(response));
             
             if(response.statusCode == 200)
                 addReceivedMessage(response.msg);
         }
         else if(xhr.status ===  504) {
+            console.log("msgId: " + msgId);
             console.log("timeout failure!");
         }
     };
 
-    var requestObj = {"text":text};
+    let requestObj = {
+        "msgId": msgId,
+        "text":text
+    };
     console.log("request: " + JSON.stringify(requestObj));
 
-    var blob = new Blob([JSON.stringify(requestObj)], {type: 'application/json'});
+    let blob = new Blob([JSON.stringify(requestObj)], {type: 'application/json'});
 
     xhr.send(blob);
 }
@@ -173,4 +180,10 @@ function updateChatWindow() {
     }
     
     chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
+}
+
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
 }
