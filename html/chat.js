@@ -19,17 +19,14 @@ for (let i=0;i<maxMsgItems;i++) {
     isFailed[i] = false;
 
     // add listener        
-    (function(index) {
-        msglist[index].addEventListener("click", function() {
-            // if(msglist.length < maxMsgItems) i = index;
-            // else i = index + maxMsgItems;
+    (function(i) {
+        msglist[i].addEventListener("click", function() {
+            console.log('click! index: '+i);
 
-            console.log('click! index: '+index);
-
-            if(isFailed[index]) {
-                let msgId = msgIdList[index];
+            if(isFailed[i]) {
+                let msgId = msgIdList[i];
                 console.log('retry the failed request: ', msgId);
-                retryRequest(msgId, index);
+                retryRequest(msgId, i);
             }
         })
     })(i);
