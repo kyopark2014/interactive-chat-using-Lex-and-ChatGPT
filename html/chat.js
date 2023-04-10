@@ -179,7 +179,7 @@ function queryResult(msgId) {
             console.log("response: " + JSON.stringify(response));
             
             if(response.statusCode == 200)
-                addReceivedMessage(response.msg);
+                addReceivedMessage(response.body);
         }
         else if(xhr.status ===  500) {
             console.log("msgId: " + msgId);
