@@ -80,9 +80,9 @@ function addSentMessage(text) {
 
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-    index++;
-
+    
     callLogList[index] = `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;
+    index++;
 
     if(index < maxMsgItems) {
         msglist[index].innerHTML = callLogList[index];
@@ -101,8 +101,8 @@ function addReceivedMessage(msg) {
     let sender = "Lex"
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-    
-    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
+        
+    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;    
     index++;
 
     if(index < maxMsgItems) {
@@ -151,17 +151,18 @@ function sendRequest(text) {
             let response = JSON.parse(xhr.responseText);
             console.log("msgId: " + msgId);
             console.log("response: " + JSON.stringify(response));
-            
+
             if(response.statusCode == 200 && response.msg) {
                 addReceivedMessage(response.msg);
+                msgResponse[index] = xhr.status;
             }
         }
         else if(xhr.status ===  504) {
-            console.log("Retry! msgId: " + msgId);
+            console.log("Retry! msgId: " + msgId);            
+            addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
+
             msgIdList[index] = msgId;
             msgResponse[index] = xhr.status;
-
-            addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
         }
     };
 
@@ -192,6 +193,7 @@ function retryRequest(msgId, indexNum) {
             if(response.statusCode == 200 && response.body) {
                 let sender = "Lex";
                 let msg = response.body;
+                msgResponse[indexNum] = 200;
 
                 callLogList[indexNum] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
 
