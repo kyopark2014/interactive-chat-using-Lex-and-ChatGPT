@@ -147,8 +147,7 @@ function sendRequest(text) {
             queryResult(msgId);                
         }
         else if(xhr.status ===  504) {
-            console.log("msgId: " + msgId);
-            console.log("timeout failure!");
+            console.log("Retry! msgId: " + msgId);
 
             queryResult(msgId);
         }
@@ -178,7 +177,7 @@ function queryResult(msgId) {
             let response = JSON.parse(xhr.responseText);
             console.log("response: " + JSON.stringify(response));
             
-            if(response.statusCode == 200)
+            if(response.statusCode == 200 && response.body)
                 addReceivedMessage(response.body);
         }
         else if(xhr.status ===  500) {

@@ -28,32 +28,40 @@ export const handler = async (event) => {
       const data = await lexClient.send(command);
       console.log("response: ", JSON.stringify(data));
 
-      response = {
-        statusCode: 200,
-        msg: data['messages'][0].content,
-      };
+      if(data['messages']) {
+        response = {
+          statusCode: 200,
+          msg: data['messages'][0].content,
+        };
 
-      // store the msgId and response
-      let date = new Date();
-      const expirationTime = date.getTime()+300;
+        // store the msgId and response
+        let date = new Date();
+        const expirationTime = date.getTime()+300;
 
-      var dbParams = {
-        TableName: tableName,
-        Item: {
-          msgId: { S: msgId },
-          result: { S: data['messages'][0].content},
-          ttl: { N: '' +expirationTime } 
-        },
-      };
-      console.log('dbParams: ' + JSON.stringify(dbParams));
+        var dbParams = {
+          TableName: tableName,
+          Item: {
+            msgId: { S: msgId },
+            result: { S: data['messages'][0].content},
+            ttl: { N: '' +expirationTime } 
+          },
+        };
+        console.log('dbParams: ' + JSON.stringify(dbParams));
 
-      try {
-        const data = await dynamo.send(new PutItemCommand(dbParams));
-        console.log(data);
-        
-        isCompleted = true;
-      } catch (err) {
-        console.error(err);
+        try {
+          const data = await dynamo.send(new PutItemCommand(dbParams));
+          console.log(data);
+          
+          isCompleted = true;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      else {
+        response = {
+          statusCode: 503,
+          body: JSON.stringify(data),          
+        };
       }
     } catch (err) {
       console.log("Error responding to message. ", err);

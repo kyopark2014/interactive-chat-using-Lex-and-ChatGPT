@@ -24,6 +24,8 @@ export const handler = async (event) => {
         console.log('dbParams: ' + JSON.stringify(dbParams));
 
         const data = await dynamo.send(new GetItemCommand(dbParams));
+        console.log('data: ', data);
+        
         let result = data.Item.result.S;
         console.log('result: ', result);
 
