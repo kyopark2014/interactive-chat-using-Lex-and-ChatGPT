@@ -24,6 +24,7 @@ for (let i=0;i<maxMsgItems;i++) {
             else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
+            console.log('[temp]previous response: '+msgResponse[index]);
             
             if(msgResponse[index] != 200) {
                 console.log('previous response: '+msgResponse[index]);
