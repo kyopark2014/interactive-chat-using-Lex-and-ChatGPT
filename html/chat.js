@@ -34,8 +34,6 @@ for (let i=0;i<maxMsgItems;i++) {
 calleeName.textContent = "Lex";  
 calleeId.textContent = "@amazon.com";
 
-index = 0;
-
 addNotifyMessage("start the interractive chat");
 
 // Listeners
