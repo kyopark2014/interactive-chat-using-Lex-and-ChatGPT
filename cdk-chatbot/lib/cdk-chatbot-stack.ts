@@ -22,7 +22,7 @@ export class CdkChatbotStack extends cdk.Stack {
     const dataTable = new dynamodb.Table(this, 'dynamodb-chatbot', {
       tableName: tableName,
       partitionKey: { name: 'msgId', type: dynamodb.AttributeType.STRING },
-      // timeToLiveAttribute: "ttl",
+      timeToLiveAttribute: "ttl",
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });

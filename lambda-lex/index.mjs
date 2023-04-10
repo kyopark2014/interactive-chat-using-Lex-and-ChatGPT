@@ -1,8 +1,10 @@
 import { LexRuntimeV2Client, RecognizeTextCommand} from "@aws-sdk/client-lex-runtime-v2"; 
-import { dynamodb } from "@aws-sdk/dynamo"; 
+//import * as DynamoDB from "@aws-sdk/client-dynamodb";
+//const dynamo = new AWS.DynamoDB({ region: "REGION" });
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 // const aws = require('aws-sdk');
-const dynamo = new dynamodb.DocumentClient();
+const dynamo = new DynamoDBClient();
 const tableName = process.env.tableName;
 
 export const handler = async (event) => {  
@@ -33,17 +35,28 @@ export const handler = async (event) => {
         msg: data['messages'][0].content,
       };
 
-      // DynamodB for personalize users
-      // DynamodB for personalize users
+      // store the msgId and response
+      const current = new Date();  
+      const expirationTime = new Date(current.getTime() + 300); // 5min 
+
       var dbParams = {
         TableName: tableName,
         Item: {
-            msgId: msgId,
-            result: data['messages'][0].content,
-        }
+          msgId: { S: msgId },
+          result: { S: data['messages'][0].content},
+          ttl: { 'N': str(expiryDateTime) } 
+        },
       };
       console.log('dbParams: ' + JSON.stringify(dbParams));
 
+      try {
+        const data = await dynamo.send(new PutItemCommand(dbParams));
+        console.log(data);
+      } catch (err) {
+        console.error(err);
+      }
+
+    /*  dynamo.put
       dynamo.put(dbParams, function (err, data) {
           if (err) {
               console.log('Failure: ' + err);
@@ -51,7 +64,7 @@ export const handler = async (event) => {
           else {
               console.log('dynamodb put result: ' + JSON.stringify(data));
           }
-      });
+      }); */
     } catch (err) {
       console.log("Error responding to message. ", err);
 
@@ -63,4 +76,4 @@ export const handler = async (event) => {
     console.log('response: ', JSON.stringify(response));
 
     return response;
-}
+};
