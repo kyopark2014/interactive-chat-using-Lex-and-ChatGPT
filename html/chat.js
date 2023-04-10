@@ -40,6 +40,7 @@ calleeId.textContent = "@amazon.com";
 index = 0;
 
 addNotifyMessage("start the interractive chat");
+index++;
 
 // Listeners
 message.addEventListener('keyup', function(e){
@@ -59,6 +60,8 @@ function onSend(e) {
     
     if(message.value != '') {
         console.log("msg: ", message.value);
+
+        index++;
         addSentMessage(message.value);
     }
     else {
@@ -81,7 +84,6 @@ function addSentMessage(text) {
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     
-    index++;
     callLogList[index] = `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;    
 
     if(index < maxMsgItems) {
@@ -101,8 +103,7 @@ function addReceivedMessage(msg) {
     let sender = "Lex"
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-        
-    index++;
+            
     callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;    
     
     if(index < maxMsgItems) {
@@ -115,8 +116,7 @@ function addReceivedMessage(msg) {
     chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 }
 
-function addNotifyMessage(msg) {
-    index++;
+function addNotifyMessage(msg) {    
     callLogList[index] = `<div class="notification-text">${msg}</div>`;         
 
     if(index < maxMsgItems)
@@ -153,12 +153,15 @@ function sendRequest(text) {
             console.log("response: " + JSON.stringify(response));
 
             if(response.statusCode == 200 && response.msg) {
+                index++;
                 addReceivedMessage(response.msg);
                 msgResponse[index] = xhr.status;
             }
         }
         else if(xhr.status ===  504) {
             console.log("Retry! msgId: " + msgId);            
+
+            index++;
             addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
 
             msgIdList[index] = msgId;
