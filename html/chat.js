@@ -81,8 +81,8 @@ function addSentMessage(text) {
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     
-    callLogList[index] = `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;
     index++;
+    callLogList[index] = `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;    
 
     if(index < maxMsgItems) {
         msglist[index].innerHTML = callLogList[index];
@@ -102,9 +102,9 @@ function addReceivedMessage(msg) {
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
         
-    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;    
     index++;
-
+    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;    
+    
     if(index < maxMsgItems) {
         msglist[index].innerHTML = callLogList[index];
     }
@@ -116,8 +116,8 @@ function addReceivedMessage(msg) {
 }
 
 function addNotifyMessage(msg) {
-    callLogList[index] = `<div class="notification-text">${msg}</div>`;     
     index++;
+    callLogList[index] = `<div class="notification-text">${msg}</div>`;         
 
     if(index < maxMsgItems)
         msglist[index].innerHTML = callLogList[index];
