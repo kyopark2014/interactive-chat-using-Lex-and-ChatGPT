@@ -162,15 +162,18 @@ function sendRequest(text) {
             }
         }
         else if(xhr.status ===  504) {
-            console.log("Retry! msgId: " + msgId);            
+            console.log("Retry! msgId: " + msgId);
+            console.log('msgIdList['+index+']: '+msgIdList[index]);            
 
-            index++;
-            console.log("index: " + index);
-            addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
-
-            msgIdList[index] = msgId;
-            console.log('msgIdList['+index+']: '+msgId);
-            isFailed[index] = true;
+            if(msgIdList[index] != msgId) {
+                index++;
+                console.log("index: " + index);
+                addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
+    
+                msgIdList[index] = msgId;
+                console.log('msgIdList['+index+']: '+msgId);
+                isFailed[index] = true;
+            }            
         }
     };
 
