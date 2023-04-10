@@ -34,8 +34,7 @@ export const handler = async (event) => {
           msg: data['messages'][0].content,
         };
 
-        // store the msgId and response
-        const expirationTime = new Date().getTime()/1000 + 10; // 10 seconds
+        const expirationTime = new Date().getTime()/1000 + 24*60*60; // 1 day
         
         var dbParams = {
           TableName: tableName,

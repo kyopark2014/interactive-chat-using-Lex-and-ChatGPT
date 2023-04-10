@@ -7,10 +7,12 @@ const message = document.querySelector('#chatInput')
 const chatPanel = document.querySelector('#chatPanel');
 
 // message log list
-var msglist = [];
-var callLogList = []
-var maxMsgItems = 10;
-var index=0;
+let msglist = [];
+let callLogList = []
+let maxMsgItems = 10;
+let index=0;
+let msgIdList = [];
+let msgResponse = [];
 
 for (let i=0;i<maxMsgItems;i++) {
     msglist.push(document.getElementById('msgLog'+i));
@@ -22,6 +24,12 @@ for (let i=0;i<maxMsgItems;i++) {
             else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
+
+            if(msgResponse[index] != 200) {
+                let msgId = msgIdList[i];
+                console.log('retry the failed request: ', msgId);
+                retryRequest(msgId, i);
+            }
         })
     })(i);
 }
@@ -61,7 +69,7 @@ function onSend(e) {
 
 (function() {
     window.addEventListener("focus", function() {
-        console.log("Back to front");
+        console.log("Back to front");        
 
         updateChatWindow();
     })
@@ -76,10 +84,12 @@ function addSentMessage(text) {
 
     callLogList[index] = `<div class="chat-sender chat-sender--right"><h1>${timestr}</h1>${text}&nbsp;<h2 id="status${index}"></h2></div>`;
 
-    if(index < maxMsgItems)
+    if(index < maxMsgItems) {
         msglist[index].innerHTML = callLogList[index];
-    else 
+    }
+    else { 
         updateChatWindow();
+    }
 
     chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 
@@ -91,22 +101,23 @@ function addReceivedMessage(msg) {
     let sender = "Lex"
     var date = new Date();
     var timestr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    
+    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
     index++;
 
-    callLogList[index] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
-
-    if(index < maxMsgItems)
+    if(index < maxMsgItems) {
         msglist[index].innerHTML = callLogList[index];
-    else 
+    }
+    else {
         updateChatWindow();
+    }
 
     chatPanel.scrollTop = chatPanel.scrollHeight;  // scroll needs to move bottom
 }
 
 function addNotifyMessage(msg) {
-    index++;
-
     callLogList[index] = `<div class="notification-text">${msg}</div>`;     
+    index++;
 
     if(index < maxMsgItems)
         msglist[index].innerHTML = callLogList[index];
@@ -132,7 +143,7 @@ function sendRequest(text) {
     const uri = "/chat";
     const xhr = new XMLHttpRequest();
     const msgId = uuidv4();
-    console.log("msgId: " + msgId);
+    console.log("msgId: " + msgId);    
 
     xhr.open("POST", uri, true);
     xhr.onreadystatechange = () => {
@@ -141,15 +152,16 @@ function sendRequest(text) {
             console.log("msgId: " + msgId);
             console.log("response: " + JSON.stringify(response));
             
-            if(response.statusCode == 200)
+            if(response.statusCode == 200 && response.msg) {
                 addReceivedMessage(response.msg);
+            }
         }
         else if(xhr.status ===  504) {
             console.log("Retry! msgId: " + msgId);
-            
-            setTimeout(function() {
-                queryResult(msgId);
-              }, 10000); 
+            msgIdList[index] = msgId;
+            msgResponse[index] = xhr.status;
+
+            addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
         }
     };
 
@@ -164,8 +176,8 @@ function sendRequest(text) {
     xhr.send(blob);
 }
 
-function queryResult(msgId) {
-    const uri = "/query";
+function retryRequest(msgId, indexNum) {
+    const uri = "/query";  // query the request from dynamodb based on msgId
     const xhr = new XMLHttpRequest();
     console.log("msgId: " + msgId);
 
@@ -178,14 +190,13 @@ function queryResult(msgId) {
             console.log("response: " + JSON.stringify(response));
             
             if(response.statusCode == 200 && response.body) {
-                addReceivedMessage(response.body);
+                let sender = "Lex";
+                let msg = response.body;
 
-                return response.body;
+                callLogList[indexNum] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
+
+                updateChatWindow();
             }
-        }
-        else if(xhr.status ===  500) {
-            console.log("msgId: " + msgId+ ' body:'+response.body);
-            console.log("Request failure!");
         }
     };
 
