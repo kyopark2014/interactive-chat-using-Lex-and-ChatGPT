@@ -19,14 +19,14 @@ for (let i=0;i<maxMsgItems;i++) {
     // add listener        
     (function(index) {
         msglist[index].addEventListener("click", function() {
-            if(msglist.length < maxMsgItems) i = index;
-            else i = index + maxMsgItems;
+            // if(msglist.length < maxMsgItems) i = index;
+            // else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
-            console.log('i: '+i);
-                let msgId = msgIdList[i];
+            //console.log('i: '+i);
+                let msgId = msgIdList[index];
                 console.log('retry the failed request: ', msgId);
-                retryRequest(msgId, i);
+                retryRequest(msgId, index);
         })
     })(i);
 }
