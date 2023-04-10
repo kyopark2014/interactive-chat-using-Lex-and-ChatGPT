@@ -141,6 +141,9 @@ function sendRequest(text) {
             if(response.statusCode == 200)
                 addReceivedMessage(response.msg);
         }
+        else if(xhr.status ===  504) {
+            console.log("timeout failure!");
+        }
     };
 
     var requestObj = {"text":text};

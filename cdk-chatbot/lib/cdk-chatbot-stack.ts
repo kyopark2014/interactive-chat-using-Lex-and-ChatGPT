@@ -8,6 +8,7 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as apiGateway from 'aws-cdk-lib/aws-apigateway';
 import * as s3Deploy from "aws-cdk-lib/aws-s3-deployment";
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 
 const debug = false;
 const stage = 'dev';
@@ -15,6 +16,16 @@ const stage = 'dev';
 export class CdkChatbotStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    // DynamoDB for emotion garden
+    const tableName = 'db-chatgpt';
+    const dataTable = new dynamodb.Table(this, 'dynamodb-chatbot', {
+      tableName: tableName,
+      partitionKey: { name: 'msgId', type: dynamodb.AttributeType.STRING },
+      // timeToLiveAttribute: "ttl",
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
 
     // s3 
     const s3Bucket = new s3.Bucket(this, "chatbot-storage",{
@@ -74,6 +85,7 @@ export class CdkChatbotStack extends cdk.Stack {
         botAliasId: "TSTALIASID",
         localeId: "ko_KR", // en_US
         sessionId: "mysession-01",
+        tableName: tableName
       }
     });     
     const lexPolicy = new iam.PolicyStatement({  
@@ -84,9 +96,9 @@ export class CdkChatbotStack extends cdk.Stack {
       new iam.Policy(this, 'rekognition-policy', {
         statements: [lexPolicy],
       }),
-    );
-    // permission for api Gateway
-    lambdaLex.grantInvoke(new iam.ServicePrincipal('apigateway.amazonaws.com'));    
+    );    
+    lambdaLex.grantInvoke(new iam.ServicePrincipal('apigateway.amazonaws.com'));  // permission for api Gateway
+    dataTable.grantReadWriteData(lambdaLex); // permission for dynamo
     
     // role
     const role = new iam.Role(this, "api-role-chatbot", {
