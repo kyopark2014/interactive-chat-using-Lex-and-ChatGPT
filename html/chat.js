@@ -161,6 +161,7 @@ function sendRequest(text) {
 
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
+                isFailed[index] = false;
             }
         }
         else if(xhr.status ===  504) {
@@ -172,6 +173,7 @@ function sendRequest(text) {
 
             msgIdList[index] = msgId;
             console.log('msgIdList['+index+']: '+msgId);
+            isFailed[index] = true;
         }
     };
 
@@ -206,6 +208,8 @@ function retryRequest(msgId, indexNum) {
                 callLogList[indexNum] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
 
                 updateChatWindow();
+
+                isFailed[indexNum] = false;
             }
         }
     };
