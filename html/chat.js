@@ -55,8 +55,12 @@ function onSend(e) {
     if(message.value != '') {
         console.log("msg: ", message.value);
 
-        index++;
-        addSentMessage(message.value);
+        index++;    
+        addSentMessage(message.value);         
+        
+        let msgId = uuidv4();
+        msgIdList[index] = msgId;
+        console.log('msgIdList['+index+']: '+msgId);
     }
     else {
         console.log("msg: ", "empty!");
