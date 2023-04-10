@@ -147,7 +147,13 @@ function sendRequest(text) {
         else if(xhr.status ===  504) {
             console.log("Retry! msgId: " + msgId);
 
-            queryResult(msgId);
+            let result = queryResult(msgId);
+
+            console.log("query result: " + result);
+            
+            /*setTimeout(function() {
+                queryResult(msgId);
+              }, 3000); */
         }
     };
 
@@ -175,8 +181,11 @@ function queryResult(msgId) {
             let response = JSON.parse(xhr.responseText);
             console.log("response: " + JSON.stringify(response));
             
-            if(response.statusCode == 200 && response.body)
+            if(response.statusCode == 200 && response.body) {
                 addReceivedMessage(response.body);
+
+                return response.body;
+            }
         }
         else if(xhr.status ===  500) {
             console.log("msgId: " + msgId+ ' body:'+response.body);
