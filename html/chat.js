@@ -143,8 +143,6 @@ function sendRequest(text) {
             
             if(response.statusCode == 200)
                 addReceivedMessage(response.msg);
-
-            queryResult(msgId);                
         }
         else if(xhr.status ===  504) {
             console.log("Retry! msgId: " + msgId);
