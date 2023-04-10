@@ -181,8 +181,8 @@ function queryResult(msgId) {
                 addReceivedMessage(response.body);
         }
         else if(xhr.status ===  500) {
-            console.log("msgId: " + msgId);
-            console.log("timeout failure!");
+            console.log("msgId: " + msgId+ ' body:'+response.body);
+            console.log("Request failure!");
         }
     };
 

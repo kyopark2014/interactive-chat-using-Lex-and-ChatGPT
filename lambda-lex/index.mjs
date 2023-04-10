@@ -36,8 +36,8 @@ export const handler = async (event) => {
 
         // store the msgId and response
         let date = new Date();
-        const expirationTime = date.getTime()+300;
-
+        const expirationTime = new Date().getTime()/1000 + 10; // 10 seconds
+        
         var dbParams = {
           TableName: tableName,
           Item: {
