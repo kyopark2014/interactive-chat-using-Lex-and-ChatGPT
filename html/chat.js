@@ -12,7 +12,6 @@ let callLogList = []
 let maxMsgItems = 10;
 let index=0;
 let msgIdList = [];
-let msgResponse = [];
 
 for (let i=0;i<maxMsgItems;i++) {
     msglist.push(document.getElementById('msgLog'+i));
@@ -24,15 +23,10 @@ for (let i=0;i<maxMsgItems;i++) {
             else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
-            console.log('[temp]previous response: '+msgResponse[index]);
             
-            if(msgResponse[index] != 200) {
-                console.log('previous response: '+msgResponse[index]);
-
                 let msgId = msgIdList[i];
                 console.log('retry the failed request: ', msgId);
                 retryRequest(msgId, i);
-            }
         })
     })(i);
 }
@@ -159,7 +153,7 @@ function sendRequest(text) {
                 addReceivedMessage(response.msg);
 
                 msgIdList[index] = msgId;
-                msgResponse[index] = xhr.status;
+                console.log('msgIdList['+index+']: '+msgId);
             }
         }
         else if(xhr.status ===  504) {
@@ -169,7 +163,7 @@ function sendRequest(text) {
             addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");             
 
             msgIdList[index] = msgId;
-            msgResponse[index] = xhr.status;
+            console.log('msgIdList['+index+']: '+msgId);
         }
     };
 
@@ -200,7 +194,6 @@ function retryRequest(msgId, indexNum) {
             if(response.statusCode == 200 && response.body) {
                 let sender = "Lex";
                 let msg = response.body;
-                msgResponse[indexNum] = 200;
 
                 callLogList[indexNum] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
 
