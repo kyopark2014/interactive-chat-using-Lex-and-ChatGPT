@@ -184,5 +184,47 @@ export class CdkChatbotStack extends cdk.Stack {
         OPENAI_API_KEY: "123456",
       } 
     }); 
+
+    // Lambda for query
+    const lambdaQuery = new lambda.Function(this, 'lambda-query', {
+      description: 'lambda for query chat result',
+      functionName: 'lambda-query',
+      handler: 'index.handler',
+      runtime: lambda.Runtime.NODEJS_18_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-query')),
+      timeout: cdk.Duration.seconds(120),
+      environment: {
+        tableName: tableName
+      }
+    });     
+    lambdaQuery.grantInvoke(new iam.ServicePrincipal('apigateway.amazonaws.com'));  // permission for api Gateway
+    dataTable.grantReadData(lambdaQuery); // permission for dynamo    
+
+    // POST method
+    const query = api.root.addResource('query');
+    query.addMethod('POST', new apiGateway.LambdaIntegration(lambdaQuery, {
+      passthroughBehavior: apiGateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
+      credentialsRole: role,
+      integrationResponses: [{
+        statusCode: '200',
+      }], 
+      proxy:false, 
+    }), {
+      methodResponses: [   // API Gateway sends to the client that called a method.
+        {
+          statusCode: '200',
+          responseModels: {
+            'application/json': apiGateway.Model.EMPTY_MODEL,
+          }, 
+        }
+      ]
+    }); 
+
+    // cloudfront setting for api gateway of stable diffusion
+    distribution.addBehavior("/query", new origins.RestApiOrigin(api), {
+      cachePolicy: cloudFront.CachePolicy.CACHING_DISABLED,
+      allowedMethods: cloudFront.AllowedMethods.ALLOW_ALL,  
+      viewerProtocolPolicy: cloudFront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    });    
   }
 }

@@ -44,7 +44,7 @@ export const handler = async (event) => {
         Item: {
           msgId: { S: msgId },
           result: { S: data['messages'][0].content},
-          ttl: { 'N': str(expiryDateTime) } 
+          ttl: { N: expirationTime } 
         },
       };
       console.log('dbParams: ' + JSON.stringify(dbParams));
