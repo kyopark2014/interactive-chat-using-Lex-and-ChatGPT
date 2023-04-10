@@ -23,7 +23,7 @@ for (let i=0;i<maxMsgItems;i++) {
             else i = index + maxMsgItems;
 
             console.log('click! index: '+index);
-            
+            console.log('i: '+i);
                 let msgId = msgIdList[i];
                 console.log('retry the failed request: ', msgId);
                 retryRequest(msgId, i);
