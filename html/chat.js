@@ -12,11 +12,11 @@ let callLogList = []
 let maxMsgItems = 10;
 let index=0;
 let msgIdList = [];
-let isFailed = [];
+let retryRequired = [];
 
 for (let i=0;i<maxMsgItems;i++) {
     msglist.push(document.getElementById('msgLog'+i));
-    isFailed[i] = false;
+    retryRequired[i] = false;
 
     // add listener        
     (function(i) {
@@ -25,7 +25,7 @@ for (let i=0;i<maxMsgItems;i++) {
 
             //if(index > maxMsgItems)
 
-            if(isFailed[i]) {
+            if(retryRequired[i]) {
                 let msgId = msgIdList[i];
                 console.log('retry the failed request: ', msgId);
                 retryRequest(msgId, i);
@@ -160,7 +160,7 @@ function sendRequest(text) {
 
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
-                isFailed[index] = false;
+                retryRequired[index] = false;
             }
         }
         else if(xhr.status ===  504) {
@@ -172,7 +172,7 @@ function sendRequest(text) {
                 console.log("Retry! msgId: " + msgIdList[index-1]);
                 msgIdList[index] = msgIdList[index-1];
                 console.log('msgIdList['+index+']: '+msgIdList[index]);
-                isFailed[index] = true;    
+                retryRequired[index] = true;    
                 
                 console.log("index: " + index);
                 addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");                             
@@ -185,7 +185,7 @@ function sendRequest(text) {
 
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
-                isFailed[index] = false;    // retrying is not avaialble
+                retryRequired[index] = false;    // retrying is not avaialble
 
                 console.log("index: " + index);
                 addReceivedMessage("메시지 수신에 실패하였습니다. 추후 다시 시도해주세요.");                             
@@ -228,7 +228,17 @@ function retryRequest(msgId, indexNum) {
 
                 updateChatWindow();
 
-                isFailed[indexNum] = false;
+                retryRequired[indexNum] = false;
+            } 
+            else {
+                let sender = "Lex";
+                let msg = "메시지 수신에 실패하였습니다. 추후 다시 시도해주세요.";
+
+                callLogList[indexNum] = `<div class="chat-receiver chat-receiver--left"><h1>${sender}</h1>${msg}&nbsp;</div>`;
+
+                updateChatWindow();
+
+                retryRequired[indexNum] = false;
             }
         }
     };
