@@ -34,8 +34,8 @@ export const handler = async (event) => {
           msg: data['messages'][0].content,
         };
 
-        const expirationTime = new Date().getTime()/1000 + 24*60*60; // 1 day
-        
+        const expirationTime = Math.round(new Date().getTime()/1000 + 24*60*60); // 1 day
+
         var dbParams = {
           TableName: tableName,
           Item: {
@@ -46,6 +46,7 @@ export const handler = async (event) => {
         };
         console.log('dbParams: ' + JSON.stringify(dbParams));
 
+        // backup the result into dynamodb 
         try {
           const data = await dynamo.send(new PutItemCommand(dbParams));
           console.log(data);
