@@ -7,7 +7,7 @@ const chatPanel = document.querySelector('#chatPanel');
 // message log list
 let msglist = [];
 let callLogList = []
-let maxMsgItems = 50;
+let maxMsgItems = 100;
 let index=0;
 let msgIdList = [];
 let retryRequired = [];

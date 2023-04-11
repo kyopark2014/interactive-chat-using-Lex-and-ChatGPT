@@ -456,7 +456,7 @@ cdk deploy
 
 ### 실행하기 
 
-WebUrl의 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 으로 브라우저에서 채팅화면으로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫 입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 의도(intent)로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄 수 있었습니다. ChatGPT 응답은 OpenAI 서버의 응답속도에 따라 지연될 수 있습니다.
+WebUrl의 ""https://d3ndv6lhze8yc5.cloudfront.net/chat.html" 으로 브라우저에서 채팅화면으로 접속합니다. 아래와 같이 웹브라우저에서 Lex와 채팅을 할 수 있습니다. 아래의 첫 입력은 "HelloWorld" Bot에 있는 이름을 확인하는 Intent 동작입니다. 이후 나오는 질문인 "Lex에 대해 설명해줘"는 "HelloWorld" Bot에 의도(intent)로 등록되지 않은 질문이므로 ChatGPT에 문의하여 아래와 같은 결과를 사용자에게 보여줄 수 있었습니다. ChatGPT를 제공하는 OpenAI 서버의 응답속도가 지연되면, [웹 브라우저의 설정](https://stackoverflow.com/questions/39751124/increase-timeout-limit-in-google-chrome)에 따라 ChatGPT로의 응답을 일부 수신하지 못할 수 있습니다. 
 
 ![noname](https://user-images.githubusercontent.com/52392004/223114419-3680ebbb-8e69-4805-8b01-1eae5c1f271a.png)
 
