@@ -146,7 +146,7 @@ function sendRequest(text) {
 
     xhr.open("POST", uri, true);
     xhr.onreadystatechange = () => {
-        if (xhr.status === 200) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
             let response = JSON.parse(xhr.responseText);
             console.log("msgId: " + msgId);
             console.log("response: " + JSON.stringify(response));
@@ -173,7 +173,7 @@ function sendRequest(text) {
                 addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");                             
             }            
         }
-        else {
+        else if(xhr.status ===  408 || xhr.status ===  500) {
             console.log("xhr.status: " + xhr.status);
             if(msgIdList[index] != msgId) {
                 msgIdList[index] = msgId;
@@ -184,6 +184,9 @@ function sendRequest(text) {
                 console.log("index: " + index);
                 addReceivedMessage("메시지 수신에 실패하였습니다. 추후 다시 시도해주세요.");                             
             }            
+        }
+        else {
+            console.log("xhr.status: " + xhr.status);
         }
     };
 
