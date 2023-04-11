@@ -146,7 +146,7 @@ function sendRequest(text) {
 
     xhr.open("POST", uri, true);
     xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.status === 200) {
             let response = JSON.parse(xhr.responseText);
             console.log("msgId: " + msgId);
             console.log("response: " + JSON.stringify(response));
