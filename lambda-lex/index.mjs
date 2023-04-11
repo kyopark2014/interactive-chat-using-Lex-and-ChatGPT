@@ -57,7 +57,7 @@ export const handler = async (event) => {
       }
       else {
         response = {
-          statusCode: 503,
+          statusCode: 408,
           body: JSON.stringify(data),          
         };
       }
