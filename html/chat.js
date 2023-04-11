@@ -165,12 +165,13 @@ function sendRequest(text) {
         }
         else if(xhr.status ===  504) {
             if(msgIdList[index] != msgId) {
+                index++;
+
                 console.log("Retry! msgId: " + msgId);
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
                 isFailed[index] = true;    
-
-                index++;
+                
                 console.log("index: " + index);
                 addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");                             
             }            
@@ -183,7 +184,7 @@ function sendRequest(text) {
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
                 isFailed[index] = false;    // retrying is not avaialble
-                                
+
                 console.log("index: " + index);
                 addReceivedMessage("메시지 수신에 실패하였습니다. 추후 다시 시도해주세요.");                             
             }            
