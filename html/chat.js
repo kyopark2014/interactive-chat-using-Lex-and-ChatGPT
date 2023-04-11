@@ -23,6 +23,8 @@ for (let i=0;i<maxMsgItems;i++) {
         msglist[i].addEventListener("click", function() {
             console.log('click! index: '+i);
 
+            //if(index > maxMsgItems)
+
             if(isFailed[i]) {
                 let msgId = msgIdList[i];
                 console.log('retry the failed request: ', msgId);
@@ -176,11 +178,12 @@ function sendRequest(text) {
         else if(xhr.status ===  408 || xhr.status ===  500) {
             console.log("xhr.status: " + xhr.status);
             if(msgIdList[index] != msgId) {
+                index++;
+
                 msgIdList[index] = msgId;
                 console.log('msgIdList['+index+']: '+msgId);
                 isFailed[index] = false;    // retrying is not avaialble
-
-                index++;
+                                
                 console.log("index: " + index);
                 addReceivedMessage("메시지 수신에 실패하였습니다. 추후 다시 시도해주세요.");                             
             }            
