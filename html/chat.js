@@ -23,12 +23,13 @@ for (let i=0;i<maxMsgItems;i++) {
         msglist[i].addEventListener("click", function() {
             console.log('click! index: '+i);
 
-            //if(index > maxMsgItems)
+            let gap = 0;
+            if(index > maxMsgItems) gap = index - maxMsgItems;
 
-            if(retryRequired[i]) {
-                let msgId = msgIdList[i];
+            if(retryRequired[i+gap]) {
+                let msgId = msgIdList[i+gap];
                 console.log('retry the failed request: ', msgId);
-                retryRequest(msgId, i);
+                retryRequest(msgId, i+gap);
             }
         })
     })(i);
