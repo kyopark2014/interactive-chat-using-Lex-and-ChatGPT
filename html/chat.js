@@ -24,7 +24,8 @@ for (let i=0;i<maxMsgItems;i++) {
             console.log('click! index: '+i);
 
             let gap = 0;
-            if(index > maxMsgItems) gap = index - maxMsgItems;
+            if(index > maxMsgItems) gap = index - maxMsgItems + 1;
+            console.log('click! index: '+i+gap);
 
             if(retryRequired[i+gap]) {
                 let msgId = msgIdList[i+gap];
