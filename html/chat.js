@@ -169,9 +169,9 @@ function sendRequest(text) {
             if(msgIdList[index] != msgId) {
                 index++;
 
-                console.log("Retry! msgId: " + msgId);
-                msgIdList[index] = msgId;
-                console.log('msgIdList['+index+']: '+msgId);
+                console.log("Retry! msgId: " + msgIdList[index-1]);
+                msgIdList[index] = msgIdList[index-1];
+                console.log('msgIdList['+index+']: '+msgIdList[index]);
                 isFailed[index] = true;    
                 
                 console.log("index: " + index);
