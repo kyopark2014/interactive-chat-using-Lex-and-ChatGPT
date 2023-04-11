@@ -175,7 +175,7 @@ function sendRequest(text) {
                 retryRequired[index] = true;    
                 
                 console.log("index: " + index);
-                addReceivedMessage("메시지 수신에 실패하였습니다. 추후 다시 시도해주세요.");                             
+                addReceivedMessage("메시지 수신에 실패하였습니다. 말풍선을 다시 클릭하여 재시도하세요.");                             
             }            
         }
         else if(xhr.status ===  408 || xhr.status ===  500) {
