@@ -165,8 +165,8 @@ function sendRequest(text) {
         }
         else if(xhr.status ===  504) {
             console.log("xhr.status: " + xhr.status);
-            console.log("msgId: " + msgId);
-            if(msgIdList[index] != msgId) {
+            console.log("msgId: " + msgIdList[index-1]);
+            if(msgIdList[index] != msgIdList[index-1]) {
                 index++;
 
                 console.log("Retry! msgId: " + msgIdList[index-1]);
