@@ -1,6 +1,7 @@
-# Amazon Lex와 ChatGPT를 이용한 대화형 Chatbot 구현하기
+# Amazon Lex에서 Open API를 이용한 대화형 Chatbot 구현하기
 
-[Amazon Lex](https://aws.amazon.com/ko/lex/)는 애플리케이션에 대화형 인터페이스를 설계, 구축, 테스트, 배포할 수 있도록 자연어 모델을 사용하는 완전관리형 인공지능(Managed AI) 서비스 입니다. 이와같이 Amazon Lex로 만든 chatbot은 연속적인 대화를 주고 받을 수 있도록 의도(intent)를 파악하여, 해당 의도를 이행하는 데 필요한 정보를 사용자에게 표시할 수 있습니다. 또한, Amazon Lex에서 파악되지 않은 의도에 대한 답변을 위하여, [Amazon Kendra](https://aws.amazon.com/ko/solutions/partners/quantiphi-lex-kendra/)를 사용할 수 있습니다. 2022년 11월에 [ChatGPT](https://openai.com/blog/chatgpt)가 출시되어 우수한 대화 능력을 보여줌으로 인해, Kendra 뿐 아니라 ChatGPT를 사용하는것도 가능해졌습니다. 본 게시글에서는 ChatGPT를 이용하여 미리 정의되지 않은 의도(intent)에 답변을 할 수 있는 대화형 chatbot을 구현하는 방법을 설명하고자 합니다. 
+[Amazon Lex](https://aws.amazon.com/ko/lex/)는 애플리케이션에 대화형 인터페이스를 설계, 구축, 테스트, 배포할 수 있도록 자연어 모델을 사용하는 완전관리형 인공지능(Managed AI) 서비스 입니다. 이와 같이 Amazon Lex로 만든 chatbot은 연속적인 대화를 주고 받을 수 있도록 의도(intent)를 파악하여, 해당 의도를 이행하는 데 필요한 정보를 사용자에게 표시할 수 있습니다. 또한, Amazon Lex에서 파악되지 않은 의도에 대한 답변을 위하여, [Amazon Kendra](https://aws.amazon.com/ko/solutions/partners/quantiphi-lex-kendra/)를 사용할 수 있습니다. 마찬가지로 3rd party Open API를 이용하여도 유사한 효과를 얻을 수 있습니다. 2022년 11월에 [ChatGPT](https://openai.com/blog/chatgpt)가 출시되어 우수한 대화 능력을 보여줌으로 인해, Kendra 뿐 아니라 ChatGPT를 Open API로 사용하는 것이 가능하게 되었습니다. 본 게시글에서는 Open API로 ChatGPT를 이용하여 미리 정의되지 않은 의도(intent)에 답변을 할 수 있는 대화형 chatbot을 구현하는 방법을 설명하고자 합니다.
+
 
 ## Chatbot Architecture
 
